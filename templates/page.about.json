@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "hyrox_about_hero": {
+      "type": "hyrox-image-hero",
+      "settings": {
+        "grayscale": true,
+        "overlay": 55,
+        "height": 75,
+        "heading": "A reason | to show up"
+      }
+    }
+  },
+  "order": ["hyrox_about_hero"]
+}

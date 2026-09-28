@@ -1,0 +1,53 @@
+{{ 'hyrox-image-hero.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign heading = section.settings.heading | default: page.title
+  assign image_alt = section.settings.image.alt | default: heading | remove: '|'
+-%}
+
+<div
+  class="hyrox-image-hero{% if section.settings.grayscale %} hyrox-image-hero--grayscale{% endif %}"
+  style="--hero-overlay: {{ section.settings.overlay | divided_by: 100.0 }}; --hero-height: {{ section.settings.height }}vh;"
+>
+  <div class="hyrox-image-hero__media">
+    {% if section.settings.image != blank %}
+      <picture>
+        {% if section.settings.mobile_image != blank %}
+          <source media="(max-width: 749px)" srcset="{{ section.settings.mobile_image | image_url: width: 1200 }}">
+        {% endif %}
+        {{ section.settings.image | image_url: width: 2400 | image_tag: class: 'hyrox-image-hero__image', widths: '750, 1100, 1500, 1920, 2400', sizes: '100vw', loading: 'eager', fetchpriority: 'high', alt: image_alt }}
+      </picture>
+    {% else %}
+      {{ 'lifestyle-2' | placeholder_svg_tag: 'hyrox-image-hero__image hyrox-image-hero__placeholder' }}
+    {% endif %}
+  </div>
+
+  <div class="hyrox-image-hero__content">
+    {% if section.settings.eyebrow != blank %}
+      <p class="hyrox-image-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <h1 class="hyrox-image-hero__title">{{ heading | escape | replace: '|', '<br>' }}</h1>
+    {% if section.settings.text != blank %}
+      <div class="hyrox-image-hero__text">{{ section.settings.text }}</div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "HYROX image hero",
+  "tag": "section",
+  "class": "hyrox-image-hero-section",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "image_picker", "id": "mobile_image", "label": "Mobile image" },
+    { "type": "checkbox", "id": "grayscale", "label": "Black and white", "default": true },
+    { "type": "range", "id": "overlay", "label": "Bottom shade", "min": 0, "max": 90, "step": 5, "unit": "%", "default": 55 },
+    { "type": "range", "id": "height", "label": "Height", "min": 40, "max": 100, "step": 5, "unit": "vh", "default": 75 },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "A reason | to show up", "info": "Use | to start a new line. Leave blank to use the page title." },
+    { "type": "richtext", "id": "text", "label": "Text" }
+  ],
+  "presets": [{ "name": "HYROX image hero" }]
+}
+{% endschema %}

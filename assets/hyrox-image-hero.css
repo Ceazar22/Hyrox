@@ -1,0 +1,114 @@
+.hyrox-image-hero-section {
+  display: block;
+  width: 100%;
+  background: #171717;
+}
+
+.hyrox-image-hero {
+  position: relative;
+  display: flex;
+  min-height: clamp(420px, var(--hero-height, 75vh), 860px);
+  align-items: flex-end;
+  overflow: hidden;
+  color: #ffffff;
+  background: #171717;
+  font-family: var(--font-body--family), Inter, Arial, sans-serif;
+}
+
+.hyrox-image-hero__media {
+  position: absolute;
+  inset: 0;
+}
+
+.hyrox-image-hero__media picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hyrox-image-hero__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hyrox-image-hero__placeholder {
+  background: #333333;
+  fill: #555555;
+}
+
+.hyrox-image-hero--grayscale .hyrox-image-hero__image {
+  filter: grayscale(1) contrast(1.05);
+}
+
+/* Shade the bottom so the heading stays readable on any photo. */
+.hyrox-image-hero::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgb(0 0 0 / var(--hero-overlay, 0.55)) 0%, rgb(0 0 0 / 0) 60%);
+  content: "";
+  pointer-events: none;
+}
+
+.hyrox-image-hero__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding: 120px 40px 64px;
+}
+
+.hyrox-image-hero__eyebrow {
+  margin: 0 0 16px;
+  color: #f2ff00;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.hyrox-image-hero .hyrox-image-hero__title {
+  max-width: 1100px;
+  margin: 0;
+  color: #ffffff;
+  font-family: var(--font-heading--family), "Arial Black", sans-serif;
+  font-size: clamp(56px, 8vw, 128px);
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.hyrox-image-hero__text {
+  max-width: 560px;
+  margin-top: 22px;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.hyrox-image-hero .hyrox-image-hero__text :is(p, li) {
+  margin: 0;
+  color: #ffffff;
+}
+
+@media (max-width: 749px) {
+  .hyrox-image-hero {
+    min-height: clamp(380px, calc(var(--hero-height, 75vh) * 0.85), 640px);
+  }
+
+  .hyrox-image-hero__content {
+    padding: 96px 16px 40px;
+  }
+
+  .hyrox-image-hero .hyrox-image-hero__title {
+    font-size: clamp(44px, 14vw, 72px);
+  }
+
+  .hyrox-image-hero__text {
+    font-size: 16px;
+  }
+}
