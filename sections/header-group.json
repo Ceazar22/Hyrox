@@ -1,0 +1,55 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "t:names.header",
+  "sections": {
+    "hyrox_header": {
+      "type": "hyrox-header",
+      "blocks": {
+        "announcement_fall": {
+          "type": "announcement",
+          "settings": {
+            "text": "Fall race season is coming.",
+            "link_label": "Train HYROX",
+            "link": "/collections/all"
+          }
+        },
+        "announcement_equipment": {
+          "type": "announcement",
+          "settings": {
+            "text": "Official equipment for every race station.",
+            "link_label": "Shop Equipment",
+            "link": "/collections/all"
+          }
+        },
+        "announcement_returns": {
+          "type": "announcement",
+          "settings": {
+            "text": "Train on what you race.",
+            "link_label": "Shop HYROX",
+            "link": "/collections/all"
+          }
+        }
+      },
+      "block_order": ["announcement_fall", "announcement_equipment", "announcement_returns"],
+      "settings": {
+        "show_announcement": true,
+        "announcement_autoplay": true,
+        "announcement_speed": 5,
+        "logo_text": "HYROX",
+        "menu": "main-menu",
+        "show_search": true,
+        "show_account": true
+      }
+    }
+  },
+  "order": ["hyrox_header"]
+}

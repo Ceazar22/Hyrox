@@ -1,0 +1,273 @@
+/* HYROX storefront system
+ * Visual source: Main.png supplied with the project.
+ * This layer deliberately styles the existing Horizon components instead of
+ * introducing a parallel component library.
+ */
+
+:root {
+  --hyrox-black: #171717;
+  --hyrox-white: #ffffff;
+  --hyrox-electric: #f2ff00;
+  --hyrox-product-gray: #f2f2f0;
+  --hyrox-soft-rule: #e3e3e0;
+  --hyrox-secondary: #777777;
+  --hyrox-long-text: #3a3a3a;
+  --hyrox-muted-on-black: #bcbcbc;
+  --hyrox-rule-on-black: #333333;
+  --hyrox-rule: 2px;
+}
+
+body {
+  color: var(--hyrox-black);
+  background: var(--hyrox-white);
+  font-family: var(--font-body--family), Inter, Arial, sans-serif;
+}
+
+/* Type hierarchy */
+:is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6) {
+  font-family: var(--font-heading--family), "Arial Black", sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  line-height: 0.96;
+  text-transform: uppercase;
+}
+
+:is(h1, .h1) { letter-spacing: -0.055em; }
+:is(h2, .h2) { letter-spacing: -0.045em; }
+:is(h5, h6, .h5, .h6) { letter-spacing: 0.01em; }
+
+.rte :is(p, li),
+.text-block :is(p, li) {
+  color: var(--hyrox-long-text);
+}
+
+/* Square, assertive controls */
+:is(.button, .button-secondary, .button-custom, button.shopify-payment-button__button--unbranded):not(.button-unstyled) {
+  min-height: 48px;
+  border-radius: 0;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.button:not(.button-secondary, .button-unstyled),
+.button-custom,
+button.shopify-payment-button__button--unbranded {
+  color: var(--hyrox-black);
+  background: var(--hyrox-electric);
+  box-shadow: inset 0 0 0 1px var(--hyrox-electric);
+}
+
+.button:not(.button-secondary, .button-unstyled):hover,
+.button-custom:hover,
+button.shopify-payment-button__button--unbranded:hover:not([disabled]) {
+  color: var(--hyrox-white);
+  background: var(--hyrox-black);
+  box-shadow: inset 0 0 0 1px var(--hyrox-black);
+}
+
+.button-secondary {
+  color: var(--hyrox-black);
+  background: var(--hyrox-white);
+  box-shadow: inset 0 0 0 1px var(--hyrox-black);
+}
+
+.button-secondary:hover {
+  color: var(--hyrox-white);
+  background: var(--hyrox-black);
+  box-shadow: inset 0 0 0 1px var(--hyrox-black);
+}
+
+a.button:not(.button-unstyled)::after,
+a.button-secondary:not(.button-unstyled)::after {
+  margin-inline-start: 22px;
+  content: "\2192";
+  font-size: 1.2em;
+  font-weight: 500;
+}
+
+input:not([type='checkbox'], [type='radio']),
+textarea,
+select,
+.field__input {
+  border-radius: 0;
+}
+
+.field__input,
+.email-signup__input,
+input:not([type='checkbox'], [type='radio']),
+textarea,
+select {
+  border-color: var(--hyrox-rule-on-black);
+}
+
+:is(.field__input, .email-signup__input):focus {
+  outline: 2px solid var(--hyrox-black);
+  outline-offset: -2px;
+}
+
+/* Utility labels and commerce badges */
+.product-badges__badge,
+.theme-drawer__badge,
+.variant-option__button-label__pill {
+  border-radius: 0;
+  color: var(--hyrox-black);
+  background: var(--hyrox-electric);
+  font-family: var(--font-body--family), Inter, sans-serif;
+  font-size: 0.625rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Product-card language from the system sheet */
+.product-card,
+.product-grid__card,
+.card-gallery,
+.product-media-container,
+.resource-card,
+.collection-card {
+  border-radius: 0;
+}
+
+.product-card .card-gallery,
+.product-card .product-media-container,
+.product-grid__card .card-gallery,
+.product-grid__card .product-media-container {
+  background: var(--hyrox-product-gray);
+}
+
+.product-card :is(h3, h4, .h3, .h4),
+.product-grid__card :is(h3, h4, .h3, .h4),
+.product-card .text-block:not(product-price) {
+  font-family: var(--font-heading--family), "Arial Black", sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.product-card product-price,
+.product-grid__card product-price,
+.price {
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.product-card:hover,
+.collection-card:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Navigation: electric announcement, black utility bar, compact labels */
+#header-group .announcement-bar {
+  color: var(--hyrox-black);
+  background: var(--hyrox-electric);
+  border-bottom: 1px solid var(--hyrox-black);
+  font-size: 0.625rem;
+  font-weight: 750;
+}
+
+#header-component,
+#header-component .header__underlay,
+#header-component .header__row {
+  color: var(--hyrox-white);
+}
+
+#header-component .header__row {
+  background: var(--hyrox-black);
+}
+
+#header-component :is(a, button, summary, .button-unstyled, .header-actions__action) {
+  color: var(--hyrox-white);
+}
+
+#header-component .menu-list__link {
+  min-height: 44px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+#header-component .menu-list__link-title {
+  position: relative;
+}
+
+#header-component .menu-list__link[aria-current='page'] .menu-list__link-title::after,
+#header-component .menu-list__link:hover .menu-list__link-title::after {
+  position: absolute;
+  right: 0;
+  bottom: -8px;
+  left: 0;
+  height: 2px;
+  background: var(--hyrox-electric);
+  content: '';
+}
+
+#header-component .cart-bubble {
+  color: var(--hyrox-black);
+  background: var(--hyrox-electric);
+}
+
+/* Drawers, popovers and selectors share the zero-radius geometry. */
+:is(dialog, .popover, .theme-drawer, .menu-drawer, .quick-add-modal),
+:is(.variant-option__button-label, .swatch, .quantity-selector) {
+  border-radius: 0;
+}
+
+.variant-option__button-label:has(input:checked),
+input:checked + .variant-option__button-label {
+  color: var(--hyrox-black);
+  background: var(--hyrox-electric);
+  border-color: var(--hyrox-electric);
+}
+
+/* Footer carries the dark half of the brand system. */
+footer .section-background,
+footer .section {
+  color: var(--hyrox-white);
+  background: var(--hyrox-black);
+}
+
+footer :is(h1, h2, h3, h4, h5, h6, p, a, label, .button-unstyled) {
+  color: inherit;
+}
+
+footer .field__input,
+footer .email-signup__input {
+  color: var(--hyrox-white);
+  background: var(--hyrox-black);
+  border-color: var(--hyrox-muted-on-black);
+}
+
+footer .button,
+footer .email-signup__button {
+  color: var(--hyrox-black);
+  background: var(--hyrox-electric);
+}
+
+footer .footer-utilities,
+footer [class*='divider'] {
+  border-color: var(--hyrox-rule-on-black);
+}
+
+@media (max-width: 749px) {
+  :is(h1, .h1) { letter-spacing: -0.045em; }
+
+  #header-group .announcement-bar {
+    min-height: 30px;
+  }
+
+  .product-card :is(h3, h4, .h3, .h4),
+  .product-grid__card :is(h3, h4, .h3, .h4) {
+    font-size: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-card,
+  .collection-card,
+  .button,
+  .button-secondary {
+    transition: none;
+  }
+}
