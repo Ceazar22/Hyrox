@@ -1,0 +1,87 @@
+{{ 'hyrox-hero.css' | asset_url | stylesheet_tag }}
+
+<script>
+  // Always open at the hero on load/refresh instead of restoring the last scroll position.
+  if (!window.hyroxHeroScrollReset && !window.location.hash) {
+    window.hyroxHeroScrollReset = true;
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+    window.addEventListener('load', () => window.scrollTo(0, 0), { once: true });
+  }
+</script>
+
+<section class="hyrox-hero">
+  <div class="hyrox-hero__content">
+    <div class="hyrox-hero__content-inner">
+      <p class="hyrox-hero__eyebrow">The Official HYROX Equipment Store</p>
+
+      <h1 class="hyrox-hero__title">
+        <span class="hyrox-hero__title-line">HYROX</span>
+        <span class="hyrox-hero__title-line hyrox-hero__title-line--highlight">Official</span>
+        <span class="hyrox-hero__title-line hyrox-hero__title-line--highlight">Equipment</span>
+      </h1>
+
+      <p class="hyrox-hero__description">
+        The same wall balls, sandbags, sleds and kettlebells used on the HYROX race floor — for your training and race preparation.
+      </p>
+
+      <div class="hyrox-hero__actions">
+        {% if section.settings.primary_button_text != blank %}
+          <a class="hyrox-hero__primary" href="{{ section.settings.primary_button_link | default: routes.all_products_collection_url }}">
+            <span>{{ section.settings.primary_button_text }}</span>
+            <span class="hyrox-hero__primary-arrow" aria-hidden="true">→</span>
+          </a>
+        {% endif %}
+        {% if section.settings.secondary_button_text != blank %}
+          <a class="hyrox-hero__secondary" href="{{ section.settings.secondary_button_link | default: routes.all_products_collection_url }}">
+            {{ section.settings.secondary_button_text }}
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="hyrox-hero__notes" aria-label="Store benefits">
+        <span class="hyrox-hero__note">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7H3v-4"/><path d="M3.8 7.8A9 9 0 1 1 3 14"/><path d="M3 7l4-4"/></svg>
+          <span>15-day returns</span>
+        </span>
+        <span class="hyrox-hero__note">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h11v11H3zM14 10h4l3 3v4h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+          <span>Flat-rate shipping on HYROX gear (continental U.S.)</span>
+        </span>
+        <span class="hyrox-hero__note">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13v-2a8 8 0 0 1 16 0v2"/><path d="M4 12H2v5h4v-5H4ZM20 12h2v5h-4v-5h2ZM18 19c-1 1-2.6 2-5 2"/><circle cx="11.5" cy="21" r="1"/></svg>
+          <span>Expert support</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hyrox-hero__media">
+    {% if section.settings.image != blank %}
+      <picture class="hyrox-hero__picture">
+        {% if section.settings.mobile_image != blank %}
+          <source media="(max-width: 749px)" srcset="{{ section.settings.mobile_image | image_url: width: 1200 }}">
+        {% endif %}
+        {{ section.settings.image | image_url: width: 2000 | image_tag: class: 'hyrox-hero__image', widths: '720, 960, 1200, 1600, 2000', sizes: '(max-width: 749px) 100vw, 48vw', loading: 'eager', fetchpriority: 'high', alt: section.settings.image.alt | default: 'HYROX athlete training with official equipment' }}
+      </picture>
+    {% else %}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'hyrox-hero__placeholder' }}
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "HYROX hero",
+  "class": "hyrox-hero-section",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Desktop image" },
+    { "type": "image_picker", "id": "mobile_image", "label": "Mobile image" },
+    { "type": "text", "id": "primary_button_text", "label": "Primary button text", "default": "Shop Official Equipment" },
+    { "type": "url", "id": "primary_button_link", "label": "Primary button link" },
+    { "type": "text", "id": "secondary_button_text", "label": "Secondary button text", "default": "Find your race weights" },
+    { "type": "url", "id": "secondary_button_link", "label": "Secondary button link" }
+  ],
+  "presets": [{ "name": "HYROX hero" }]
+}
+{% endschema %}

@@ -1,0 +1,55 @@
+{{ 'hyrox-collection-hero.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  # Title: first word plain, the rest highlighted. Falls back to section settings.
+  assign title_source = collection.title | default: section.settings.fallback_title | strip
+  assign title_words = title_source | split: ' '
+  assign title_first = title_words | first
+  assign title_rest = title_source | remove_first: title_first | strip
+
+  if title_rest == blank
+    assign title_first = section.settings.fallback_title
+    assign title_rest = section.settings.fallback_highlight
+  endif
+
+  assign description = collection.description | strip
+  if description == blank
+    assign description = section.settings.fallback_description
+  endif
+-%}
+
+<div class="hyrox-collection-hero">
+  {% if section.settings.show_breadcrumbs %}
+    <nav class="hyrox-collection-hero__breadcrumbs" aria-label="Breadcrumb">
+      <ol role="list">
+        <li><a href="{{ routes.root_url }}">Home</a></li>
+        <li aria-current="page">{{ collection.title | default: title_source }}</li>
+      </ol>
+    </nav>
+  {% endif %}
+
+  <h1 class="hyrox-collection-hero__title">
+    {% if title_first != blank %}<span>{{ title_first }}</span>{% endif %}
+    {% if title_rest != blank %}<span class="hyrox-collection-hero__highlight">{{ title_rest }}</span>{% endif %}
+  </h1>
+
+  {% if description != blank %}
+    <div class="hyrox-collection-hero__description rte">{{ description }}</div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "HYROX collection hero",
+  "tag": "section",
+  "class": "hyrox-collection-hero-section",
+  "settings": [
+    { "type": "checkbox", "id": "show_breadcrumbs", "label": "Show breadcrumbs", "default": true },
+    { "type": "paragraph", "content": "Uses the collection title and description. The first word of the title is plain, the rest is highlighted. The fallbacks below show when the title is one word or the description is empty." },
+    { "type": "text", "id": "fallback_title", "label": "Fallback heading", "default": "HYROX" },
+    { "type": "text", "id": "fallback_highlight", "label": "Fallback highlighted heading", "default": "Official Equipment" },
+    { "type": "richtext", "id": "fallback_description", "label": "Fallback description", "default": "<p>Competition-spec stations, division bundles and gym-floor gear — the same equipment used on the HYROX race floor.</p>" }
+  ],
+  "presets": [{ "name": "HYROX collection hero" }]
+}
+{% endschema %}

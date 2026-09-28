@@ -9,90 +9,131 @@
  */{
   "sections": {
     "hero_jVaWmY": {
-      "type": "hero",
+      "type": "hyrox-hero",
+      "settings": {
+        "primary_button_text": "Shop Official Equipment",
+        "primary_button_link": "shopify://collections/all",
+        "secondary_button_text": "Find your race weights",
+        "secondary_button_link": "shopify://collections/all"
+      }
+    },
+    "hyrox_proof_strip": {
+      "type": "hyrox-proof-strip",
       "blocks": {
-        "text_YLPk4p": {
-          "type": "text",
-          "name": "t:names.heading",
-          "settings": {
-            "text": "<p>Browse our latest products</p>",
-            "text_color": "{{ settings.color_palette.background }}",
-            "width": "fit-content",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "h2",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
+        "proof_official": {
+          "type": "item",
+          "settings": { "text": "Official HYROX competition equipment" }
         },
-        "button_H9gpTf": {
-          "type": "button",
-          "name": "t:names.button",
-          "settings": {
-            "label": "Shop all",
-            "link": "shopify://collections/all",
-            "open_in_new_tab": false,
-            "style_class": "button-custom",
-            "custom_button_background": "rgba(0,0,0,0)",
-            "custom_button_text": "{{ settings.color_palette.background }}",
-            "custom_button_border": "{{ settings.color_palette.background }}",
-            "width": "fit-content",
-            "custom_width": 100,
-            "width_mobile": "fit-content",
-            "custom_width_mobile": 100
-          },
-          "blocks": {}
+        "proof_station": {
+          "type": "item",
+          "settings": { "text": "Station-specific prep for every race weight" }
+        },
+        "proof_familiarity": {
+          "type": "item",
+          "settings": { "text": "Race-day familiarity: train on what you race on" }
         }
       },
-      "block_order": [
-        "text_YLPk4p",
-        "button_H9gpTf"
-      ],
-      "name": "t:names.hero",
+      "block_order": ["proof_official", "proof_station", "proof_familiarity"],
+      "settings": {}
+    },
+    "hyrox_product_list": {
+      "type": "hyrox-product-list",
       "settings": {
-        "media_type_1": "image",
-        "media_type_2": "image",
-        "stack_media_on_mobile": false,
-        "custom_mobile_media": false,
-        "media_type_1_mobile": "image",
-        "media_type_2_mobile": "image",
-        "open_in_new_tab": false,
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "space-between",
-        "vertical_alignment": "flex-end",
-        "align_baseline": true,
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "flex-end",
-        "gap": 24,
-        "section_width": "page-width",
-        "section_height": "medium",
-        "section_height_custom": 50,
-        "background_color": "rgba(0,0,0,0)",
-        "toggle_overlay": true,
-        "overlay_color": "#12121266",
-        "overlay_style": "solid",
-        "gradient_direction": "to bottom",
-        "blurred_reflection": false,
-        "reflection_opacity": 75,
-        "padding-block-start": 100,
-        "padding-block-end": 72
+        "shop_all_text": "Shop all HYROX equipment",
+        "shop_all_link": "shopify://collections/all"
       }
+    },
+    "hyrox_division_weights": {
+      "type": "hyrox-division-weights",
+      "blocks": {
+        "mens_open": {
+          "type": "division",
+          "settings": { "tab_label": "Men's Open", "heading": "MEN'S OPEN RACE WEIGHTS", "sled_push": "152 KG", "sled_pull": "103 KG", "farmers_carry": "2×24 KG", "sandbag_lunges": "20 KG", "wall_balls": "6 KG", "button_text": "Shop the Men's Open Bundle", "rating_text": "4.9 rating · Bundle includes a $100 gift card", "secondary_text": "Or build it station by station" }
+        },
+        "womens_open": {
+          "type": "division",
+          "settings": { "tab_label": "Women's Open", "heading": "WOMEN'S OPEN RACE WEIGHTS", "sled_push": "102 KG", "sled_pull": "78 KG", "farmers_carry": "2×16 KG", "sandbag_lunges": "10 KG", "wall_balls": "4 KG", "button_text": "Shop the Women's Open Bundle", "rating_text": "4.9 rating · Bundle includes a $100 gift card", "secondary_text": "Or build it station by station" }
+        },
+        "mens_pro": {
+          "type": "division",
+          "settings": { "tab_label": "Men's Pro", "heading": "MEN'S PRO RACE WEIGHTS", "sled_push": "202 KG", "sled_pull": "153 KG", "farmers_carry": "2×32 KG", "sandbag_lunges": "30 KG", "wall_balls": "9 KG", "button_text": "Shop the Men's Pro Bundle", "rating_text": "4.9 rating · Bundle includes a $100 gift card", "secondary_text": "Or build it station by station" }
+        },
+        "womens_pro": {
+          "type": "division",
+          "settings": { "tab_label": "Women's Pro", "heading": "WOMEN'S PRO RACE WEIGHTS", "sled_push": "152 KG", "sled_pull": "103 KG", "farmers_carry": "2×24 KG", "sandbag_lunges": "20 KG", "wall_balls": "6 KG", "button_text": "Shop the Women's Pro Bundle", "rating_text": "4.9 rating · Bundle includes a $100 gift card", "secondary_text": "Or build it station by station" }
+        }
+      },
+      "block_order": ["mens_open", "womens_open", "mens_pro", "womens_pro"],
+      "settings": {}
+    },
+    "hyrox_bundle_list": {
+      "type": "hyrox-bundle-list",
+      "settings": {
+        "division_badge": "$100 GIFT CARD",
+        "starter_badge": "FREE SHIPPING",
+        "shop_all_text": "Shop All",
+        "division_link": "shopify://collections/all",
+        "starter_link": "shopify://collections/all",
+        "station_link": "shopify://collections/all",
+        "gym_link": "shopify://collections/all"
+      }
+    },
+    "hyrox_why_official": {
+      "type": "hyrox-why-official",
+      "blocks": {
+        "returns": {
+          "type": "benefit",
+          "settings": {
+            "heading": "15-Day Returns",
+            "text": "Try your equipment at home with our 15-day no-questions-asked return policy."
+          }
+        },
+        "support": {
+          "type": "benefit",
+          "settings": {
+            "heading": "Expert Support",
+            "text": "Help when you need it from a team with 20 years of experience building strength training equipment."
+          }
+        }
+      },
+      "block_order": ["returns", "support"],
+      "settings": {}
+    },
+    "hyrox_faq": {
+      "type": "hyrox-faq",
+      "blocks": {
+        "processing": {
+          "type": "question",
+          "settings": { "question": "How long does it take to process an order?", "answer": "<p>Orders are typically processed within 48 hours of payment. Allow longer during holidays, closures or high order volume.</p>" }
+        },
+        "shipping": {
+          "type": "question",
+          "settings": { "question": "How much is shipping?", "answer": "<p>Shipping costs are calculated at checkout based on your equipment and delivery address.</p>" }
+        },
+        "locations": {
+          "type": "question",
+          "settings": { "question": "Where do you ship to?", "answer": "<p>Available delivery locations are shown during checkout.</p>" }
+        },
+        "returns": {
+          "type": "question",
+          "settings": { "question": "Can I return my equipment?", "answer": "<p>Eligible equipment can be returned within 15 days according to our returns policy.</p>" }
+        }
+      },
+      "block_order": ["processing", "shipping", "locations", "returns"],
+      "settings": {
+        "shipping_text": "Shipping & returns policy",
+        "contact_text": "Contact us",
+        "tracking_text": "Order tracking",
+        "help_text": "Help Center"
+      }
+    },
+    "hyrox_newsletter": {
+      "type": "hyrox-newsletter",
+      "settings": {}
     },
     "product_list_fa6P9H": {
       "type": "product-list",
+      "disabled": true,
       "blocks": {
         "static-header": {
           "type": "_product-list-content",
@@ -280,6 +321,13 @@
   },
   "order": [
     "hero_jVaWmY",
+    "hyrox_proof_strip",
+    "hyrox_product_list",
+    "hyrox_division_weights",
+    "hyrox_bundle_list",
+    "hyrox_why_official",
+    "hyrox_faq",
+    "hyrox_newsletter",
     "product_list_fa6P9H"
   ]
 }

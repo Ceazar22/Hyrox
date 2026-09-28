@@ -1,0 +1,119 @@
+.hyrox-proof-strip-section {
+  background: #ffffff;
+}
+
+.hyrox-proof-strip {
+  --proof-black: #ffffff;
+  --proof-yellow: #f2ff00;
+  --proof-text: #171717;
+  --proof-rule: #e3e3e0;
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  overflow: hidden;
+  color: var(--proof-text);
+  background: var(--proof-black);
+  font-family: var(--font-body--family), Inter, Arial, sans-serif;
+}
+
+.hyrox-proof-strip__track {
+  width: 100%;
+}
+
+.hyrox-proof-strip__group:first-child {
+  display: grid;
+  grid-template-columns: repeat(var(--proof-count), minmax(0, 1fr));
+}
+
+.hyrox-proof-strip__group[aria-hidden='true'] {
+  display: none;
+}
+
+.hyrox-proof-strip__item {
+  display: flex;
+  min-width: 0;
+  min-height: 77px;
+  align-items: center;
+  gap: 14px;
+  border-right: 1px solid var(--proof-rule);
+  border-bottom: 1px solid var(--proof-rule);
+  padding: 18px 40px;
+  background: #ffffff;
+}
+
+.hyrox-proof-strip__item:first-child {
+  border-left: 1px solid var(--proof-rule);
+}
+
+.hyrox-proof-strip__number {
+  display: grid;
+  min-width: 34px;
+  height: 25px;
+  place-items: center;
+  padding-inline: 7px;
+  color: var(--proof-yellow);
+  background: #171717;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.hyrox-proof-strip__text {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 749px) {
+  .hyrox-proof-strip__viewport {
+    overflow: hidden;
+  }
+
+  .hyrox-proof-strip__track {
+    display: flex;
+    width: max-content;
+    animation: hyrox-proof-marquee 20s linear infinite;
+    will-change: transform;
+  }
+
+  .hyrox-proof-strip__group,
+  .hyrox-proof-strip__group:first-child,
+  .hyrox-proof-strip__group[aria-hidden='true'] {
+    display: flex;
+    width: max-content;
+  }
+
+  .hyrox-proof-strip__item {
+    width: min(86vw, 390px);
+    flex: 0 0 min(86vw, 390px);
+    padding-inline: 20px;
+  }
+
+  .hyrox-proof-strip__track:hover,
+  .hyrox-proof-strip__track:focus-within {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes hyrox-proof-marquee {
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) and (max-width: 749px) {
+  .hyrox-proof-strip__viewport {
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .hyrox-proof-strip__track {
+    animation: none;
+  }
+
+  .hyrox-proof-strip__group[aria-hidden='true'] {
+    display: none;
+  }
+}

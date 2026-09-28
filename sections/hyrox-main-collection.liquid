@@ -1,0 +1,224 @@
+{{ 'hyrox-main-collection.css' | asset_url | stylesheet_tag }}
+{{ 'hyrox-product-card.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'hyrox-main-collection.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign price_filter = nil
+  assign active_filter_count = 0
+  for filter in collection.filters
+    if filter.type == 'price_range'
+      assign price_filter = filter
+      if filter.min_value.value != nil or filter.max_value.value != nil
+        assign active_filter_count = active_filter_count | plus: 1
+      endif
+    else
+      assign active_filter_count = active_filter_count | plus: filter.active_values.size
+    endif
+  endfor
+
+  assign current_sort = collection.sort_by | default: collection.default_sort_by
+-%}
+
+{% paginate collection.products by section.settings.products_per_page %}
+  <hyrox-collection class="hyrox-collection">
+    <button type="button" class="hyrox-collection__filter-toggle" aria-expanded="false" aria-controls="HyroxFilters-{{ section.id }}" data-filter-toggle>
+      Filters{% if active_filter_count > 0 %} ({{ active_filter_count }}){% endif %}
+    </button>
+
+    <aside id="HyroxFilters-{{ section.id }}" class="hyrox-collection__sidebar" data-filter-panel>
+      <div class="hyrox-collection__filters-head">
+        <h2 class="hyrox-collection__filters-title">Filters</h2>
+        {% if active_filter_count > 0 %}
+          <a class="hyrox-collection__clear" href="{{ collection.url }}?sort_by={{ current_sort }}">Clear all</a>
+        {% endif %}
+      </div>
+
+      {%- comment -%} Price buckets: built on Shopify's price filter (Search & Discovery). {%- endcomment -%}
+      {% if price_filter and section.settings.price_ranges != blank %}
+        {%- liquid
+          assign price_base = price_filter.url_to_remove
+          if price_base contains '?'
+            assign price_join = '&'
+          else
+            assign price_join = '?'
+          endif
+          assign price_active = false
+          if price_filter.min_value.value != nil or price_filter.max_value.value != nil
+            assign price_active = true
+          endif
+          assign show_price_counts = false
+          if paginate.pages <= 1 and price_active == false
+            assign show_price_counts = true
+          endif
+          assign ranges = section.settings.price_ranges | newline_to_br | split: '<br />'
+        -%}
+        <div class="hyrox-collection__group" role="group" aria-labelledby="HyroxFilterPrice-{{ section.id }}">
+          <h3 id="HyroxFilterPrice-{{ section.id }}" class="hyrox-collection__group-title">{{ price_filter.label }}</h3>
+          <ul role="list">
+            {% for range in ranges %}
+              {%- liquid
+                assign parts = range | strip | split: '|'
+                assign label = parts[0] | strip
+                if label == blank
+                  continue
+                endif
+                assign min = parts[1] | strip
+                assign max = parts[2] | strip
+                assign min_cents = min | times: 100
+                assign max_cents = max | times: 100
+
+                assign is_active = false
+                if price_active
+                  assign current_min = price_filter.min_value.value | default: 0
+                  assign current_max = price_filter.max_value.value | default: 'none'
+                  assign wanted_max = 'none'
+                  if max != blank
+                    assign wanted_max = max_cents
+                  endif
+                  if current_min == min_cents and current_max == wanted_max
+                    assign is_active = true
+                  endif
+                endif
+
+                if is_active
+                  assign range_url = price_base
+                else
+                  assign range_url = price_base | append: price_join | append: 'filter.v.price.gte=' | append: min
+                  if max != blank
+                    assign range_url = range_url | append: '&filter.v.price.lte=' | append: max
+                  endif
+                endif
+
+                assign range_count = 0
+                if show_price_counts
+                  for product in collection.products
+                    if product.price_min >= min_cents
+                      if max == blank or product.price_min <= max_cents
+                        assign range_count = range_count | plus: 1
+                      endif
+                    endif
+                  endfor
+                endif
+              -%}
+              <li>
+                <a class="hyrox-collection__option" href="{{ range_url }}" role="checkbox" aria-checked="{{ is_active }}" rel="nofollow">
+                  <span class="hyrox-collection__box" aria-hidden="true"></span>
+                  <span class="hyrox-collection__option-label">{{ label }}</span>
+                  {% if show_price_counts %}<span class="hyrox-collection__count">{{ range_count }}</span>{% endif %}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      {% for filter in collection.filters %}
+        {% if filter.type == 'list' or filter.type == 'boolean' %}
+          <div class="hyrox-collection__group" role="group" aria-labelledby="HyroxFilter-{{ section.id }}-{{ forloop.index }}">
+            <h3 id="HyroxFilter-{{ section.id }}-{{ forloop.index }}" class="hyrox-collection__group-title">{{ filter.label }}</h3>
+            <ul role="list">
+              {% for value in filter.values %}
+                {% if value.count == 0 and value.active == false %}{% continue %}{% endif %}
+                <li>
+                  <a class="hyrox-collection__option" href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}" role="checkbox" aria-checked="{{ value.active }}" rel="nofollow">
+                    <span class="hyrox-collection__box" aria-hidden="true"></span>
+                    <span class="hyrox-collection__option-label">{{ value.label }}</span>
+                    <span class="hyrox-collection__count">{{ value.count }}</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      {% if section.settings.promo_heading != blank %}
+        <a class="hyrox-collection__promo" href="{{ section.settings.promo_link | default: routes.root_url }}">
+          {% if section.settings.promo_eyebrow != blank %}<span class="hyrox-collection__promo-eyebrow">{{ section.settings.promo_eyebrow }}</span>{% endif %}
+          <span class="hyrox-collection__promo-heading">{{ section.settings.promo_heading }}</span>
+          {% if section.settings.promo_link_text != blank %}<span class="hyrox-collection__promo-link">{{ section.settings.promo_link_text }} <span aria-hidden="true">→</span></span>{% endif %}
+        </a>
+      {% endif %}
+    </aside>
+
+    <div class="hyrox-collection__main">
+      <div class="hyrox-collection__toolbar">
+        <p class="hyrox-collection__total">
+          {{ collection.products_count }} {% if collection.products_count == 1 %}product{% else %}products{% endif %}
+        </p>
+        <label class="hyrox-collection__sort">
+          <span>Sort</span>
+          <select name="sort_by" data-sort>
+            {% for option in collection.sort_options %}
+              <option value="{{ option.value }}"{% if option.value == current_sort %} selected{% endif %}>{{ option.name }}</option>
+            {% endfor %}
+          </select>
+        </label>
+      </div>
+
+      {% if collection.products.size > 0 %}
+        <ul class="hyrox-collection__grid" role="list">
+          {% for product in collection.products %}
+            <li>{% render 'hyrox-product-card', product: product, badge_rules: section.settings.badge_rules %}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="hyrox-collection__empty">
+          <p class="hyrox-collection__empty-title">No products found</p>
+          {% if active_filter_count > 0 %}
+            <p>Try removing some filters. <a href="{{ collection.url }}">Clear all filters</a></p>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if paginate.pages > 1 %}
+        <nav class="hyrox-collection__pagination" aria-label="Pagination">
+          {% if paginate.previous %}
+            <a href="{{ paginate.previous.url }}" aria-label="Previous page">←</a>
+          {% endif %}
+          {% for part in paginate.parts %}
+            {% if part.is_link %}
+              <a href="{{ part.url }}">{{ part.title }}</a>
+            {% elsif part.title == paginate.current_page %}
+              <span aria-current="page">{{ part.title }}</span>
+            {% else %}
+              <span>{{ part.title }}</span>
+            {% endif %}
+          {% endfor %}
+          {% if paginate.next %}
+            <a href="{{ paginate.next.url }}" aria-label="Next page">→</a>
+          {% endif %}
+        </nav>
+      {% endif %}
+
+      {% if collection.products.size > 0 %}
+        {%- assign shown_count = paginate.current_offset | plus: collection.products.size -%}
+        <p class="hyrox-collection__summary">
+          All prices in {{ cart.currency.iso_code }}. Showing {{ shown_count }} of {{ collection.products_count }} {% if collection.products_count == 1 %}product{% else %}products{% endif %}.
+        </p>
+      {% endif %}
+    </div>
+  </hyrox-collection>
+{% endpaginate %}
+
+{% schema %}
+{
+  "name": "HYROX product grid",
+  "tag": "section",
+  "class": "hyrox-main-collection-section",
+  "settings": [
+    { "type": "range", "id": "products_per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    { "type": "header", "content": "Filters" },
+    { "type": "paragraph", "content": "Filters come from the Shopify Search & Discovery app. Enable the Price filter there for the price ranges to appear." },
+    { "type": "textarea", "id": "price_ranges", "label": "Price ranges", "info": "One per line: Label | min | max (leave max empty for no upper limit)", "default": "Under $100 | 0 | 100\n$100 – $500 | 100 | 500\n$500 – $1,500 | 500 | 1500\n$1,500+ | 1500 |" },
+    { "type": "header", "content": "Product badges" },
+    { "type": "textarea", "id": "badge_rules", "label": "Badge rules", "info": "One per line: product tag | Badge text. A product's custom.badge metafield takes priority.", "default": "$100 Gift Card | $100 Gift Card\nFree Shipping | Free Shipping" },
+    { "type": "header", "content": "Sidebar promo" },
+    { "type": "text", "id": "promo_eyebrow", "label": "Eyebrow", "default": "Not sure what you need?" },
+    { "type": "text", "id": "promo_heading", "label": "Heading", "default": "Find your division race weights" },
+    { "type": "text", "id": "promo_link_text", "label": "Link text", "default": "See the guide" },
+    { "type": "url", "id": "promo_link", "label": "Link" }
+  ],
+  "presets": [{ "name": "HYROX product grid" }]
+}
+{% endschema %}

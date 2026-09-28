@@ -1,0 +1,73 @@
+{{ 'hyrox-faq.css' | asset_url | stylesheet_tag }}
+
+<div class="hyrox-faq">
+  <header class="hyrox-faq__header">
+    <p class="hyrox-faq__eyebrow">FAQ</p>
+    <h2 class="hyrox-faq__title">
+      <span>Your Questions,</span>
+      <span class="hyrox-faq__highlight">Answered</span>
+    </h2>
+  </header>
+
+  <div class="hyrox-faq__body">
+    <nav class="hyrox-faq__links" aria-label="Customer support links">
+        {% if section.settings.shipping_text != blank %}<a href="{{ section.settings.shipping_link | default: routes.root_url }}"><span>{{ section.settings.shipping_text }}</span><span aria-hidden="true">↗</span></a>{% endif %}
+        {% if section.settings.contact_text != blank %}<a href="{{ section.settings.contact_link | default: routes.root_url }}"><span>{{ section.settings.contact_text }}</span><span aria-hidden="true">↗</span></a>{% endif %}
+        {% if section.settings.tracking_text != blank %}<a href="{{ section.settings.tracking_link | default: routes.root_url }}"><span>{{ section.settings.tracking_text }}</span><span aria-hidden="true">↗</span></a>{% endif %}
+        {% if section.settings.help_text != blank %}<a href="{{ section.settings.help_link | default: routes.root_url }}"><span>{{ section.settings.help_text }}</span><span aria-hidden="true">↗</span></a>{% endif %}
+      </nav>
+
+    <div class="hyrox-faq__grid">
+      {% for block in section.blocks %}
+        <details class="hyrox-faq__item" name="hyrox-faq-{{ section.id }}"{% if forloop.first %} open{% endif %} {{ block.shopify_attributes }}>
+          <summary>
+            <span>{{ block.settings.question }}</span>
+            <span class="hyrox-faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="hyrox-faq__answer rte">{{ block.settings.answer }}</div>
+        </details>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "HYROX FAQ",
+  "tag": "section",
+  "class": "hyrox-faq-section",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "header", "content": "Support links" },
+    { "type": "text", "id": "shipping_text", "label": "Shipping link text", "default": "Shipping & returns policy" },
+    { "type": "url", "id": "shipping_link", "label": "Shipping link" },
+    { "type": "text", "id": "contact_text", "label": "Contact link text", "default": "Contact us" },
+    { "type": "url", "id": "contact_link", "label": "Contact link" },
+    { "type": "text", "id": "tracking_text", "label": "Tracking link text", "default": "Order tracking" },
+    { "type": "url", "id": "tracking_link", "label": "Tracking link" },
+    { "type": "text", "id": "help_text", "label": "Help link text", "default": "Help Center" },
+    { "type": "url", "id": "help_link", "label": "Help link" }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "How long does it take to process an order?" },
+        { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>Orders are typically processed within 48 hours of payment.</p>" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "HYROX FAQ",
+      "blocks": [
+        { "type": "question", "settings": { "question": "How long does it take to process an order?", "answer": "<p>Orders are typically processed within 48 hours of payment. Allow longer during holidays, closures or high order volume.</p>" } },
+        { "type": "question", "settings": { "question": "How much is shipping?", "answer": "<p>Shipping costs are calculated at checkout based on your equipment and delivery address.</p>" } },
+        { "type": "question", "settings": { "question": "Where do you ship to?", "answer": "<p>Available delivery locations are shown during checkout.</p>" } },
+        { "type": "question", "settings": { "question": "Can I return my equipment?", "answer": "<p>Eligible equipment can be returned within 15 days according to our returns policy.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

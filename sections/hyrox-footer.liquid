@@ -1,0 +1,88 @@
+{{ 'hyrox-footer.css' | asset_url | stylesheet_tag }}
+
+<footer class="hyrox-footer">
+  <div class="hyrox-footer__top">
+    <div class="hyrox-footer__brand">
+      <a class="hyrox-footer__logo" href="{{ routes.root_url }}">
+        {% if section.settings.logo != blank %}
+          {{ section.settings.logo | image_url: width: 320 | image_tag: alt: shop.name, loading: 'lazy', class: 'hyrox-footer__logo-image' }}
+        {% else %}
+          {{ section.settings.logo_text | default: shop.name }}
+        {% endif %}
+      </a>
+      {% if section.settings.tagline != blank %}
+        <p class="hyrox-footer__tagline">{{ section.settings.tagline }}</p>
+      {% endif %}
+    </div>
+
+    <div class="hyrox-footer__columns">
+      {% for block in section.blocks %}
+        <nav class="hyrox-footer__column" aria-label="{{ block.settings.heading | escape }}" {{ block.shopify_attributes }}>
+          {% if block.settings.heading != blank %}
+            <h2 class="hyrox-footer__heading">{{ block.settings.heading }}</h2>
+          {% endif %}
+          <ul class="hyrox-footer__links" role="list">
+            {% if block.settings.menu != blank %}
+              {% for link in block.settings.menu.links %}
+                <li><a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title }}</a></li>
+              {% endfor %}
+            {% else %}
+              {% assign lines = block.settings.links | newline_to_br | split: '<br />' %}
+              {% for line in lines %}
+                {% assign parts = line | strip | split: '|' %}
+                {% assign label = parts[0] | strip %}
+                {% if label != blank %}
+                  {% assign url = parts[1] | strip | default: routes.root_url %}
+                  <li><a href="{{ url }}">{{ label }}</a></li>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          </ul>
+        </nav>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="hyrox-footer__bottom">
+    <p class="hyrox-footer__copyright">
+      &copy; {{ 'now' | date: '%Y' }} {{ section.settings.copyright_name | default: shop.name }}. All rights reserved.
+      {%- if section.settings.show_country %} &middot; {{ localization.country.name }}{% endif %}
+    </p>
+    <ul class="hyrox-footer__legal" role="list">
+      {% if shop.privacy_policy %}<li><a href="{{ shop.privacy_policy.url }}">{{ shop.privacy_policy.title }}</a></li>{% endif %}
+      {% if shop.terms_of_service %}<li><a href="{{ shop.terms_of_service.url }}">{{ shop.terms_of_service.title }}</a></li>{% endif %}
+      {% if section.settings.accessibility_link != blank %}<li><a href="{{ section.settings.accessibility_link }}">{{ section.settings.accessibility_text }}</a></li>{% endif %}
+    </ul>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "HYROX footer",
+  "tag": "section",
+  "class": "hyrox-footer-section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Logo" },
+    { "type": "text", "id": "logo_text", "label": "Logo text", "default": "HYROX" },
+    { "type": "text", "id": "tagline", "label": "Tagline", "default": "Where the strong get stronger." },
+    { "type": "header", "content": "Bottom bar" },
+    { "type": "text", "id": "copyright_name", "label": "Copyright name", "default": "HYROX" },
+    { "type": "checkbox", "id": "show_country", "label": "Show country", "default": true },
+    { "type": "text", "id": "accessibility_text", "label": "Accessibility link text", "default": "Accessibility" },
+    { "type": "url", "id": "accessibility_link", "label": "Accessibility link" }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Link column",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Shop" },
+        { "type": "link_list", "id": "menu", "label": "Menu", "info": "When a menu is selected, it replaces the links below." },
+        { "type": "textarea", "id": "links", "label": "Links", "info": "One per line: Label | /url", "default": "Home Gyms | /collections/all\nWeights & Bars | /collections/all" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "HYROX footer" }]
+}
+{% endschema %}

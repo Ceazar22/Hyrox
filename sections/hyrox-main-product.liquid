@@ -1,0 +1,246 @@
+{{ 'hyrox-main-product.css' | asset_url | stylesheet_tag }}
+{{ 'hyrox-product-card.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'hyrox-product.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign breadcrumb_collection = collection | default: product.collections.first
+
+  assign rating = product.metafields.reviews.rating.value.rating
+  assign rating_count = product.metafields.reviews.rating_count.value
+  assign rating_stars = rating | round
+
+  assign warranty = product.metafields.custom.warranty
+  assign specs = product.metafields.custom.specs
+
+  assign bundle_products = product.metafields.custom.bundles.value | default: section.settings.bundle_products
+  assign gallery_badge = product.metafields.custom.gallery_badge.value | default: section.settings.gallery_badge
+-%}
+
+<script type="application/ld+json">{{ product | structured_data }}</script>
+
+<hyrox-product class="hyrox-product" data-section-id="{{ section.id }}">
+  <script type="application/json" data-variants>
+    [{%- for variant in product.variants -%}
+      {"id":{{ variant.id }},"options":{{ variant.options | json }},"available":{{ variant.available | json }},"price":{{ variant.price | money | json }},"title":{{ variant.title | json }},"image":{% if variant.featured_image %}{{ variant.featured_image | image_url: width: 160 | json }}{% else %}null{% endif %},"media":{{ variant.featured_media.id | default: 'null' }}}{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}]
+  </script>
+
+  {% if section.settings.show_breadcrumbs %}
+    <nav class="hyrox-product__breadcrumbs" aria-label="Breadcrumb">
+      <ol role="list">
+        <li><a href="{{ routes.root_url }}">Home</a></li>
+        {% if breadcrumb_collection %}<li><a href="{{ breadcrumb_collection.url }}">{{ breadcrumb_collection.title }}</a></li>{% endif %}
+        <li aria-current="page">{{ product.title }}</li>
+      </ol>
+    </nav>
+  {% endif %}
+
+  <div class="hyrox-product__layout">
+    {%- comment -%} Gallery {%- endcomment -%}
+    <div class="hyrox-product__gallery">
+      {% if product.media.size > 1 %}
+        <ul class="hyrox-product__thumbs" role="list">
+          {% for media in product.media %}
+            <li>
+              <button type="button" class="hyrox-product__thumb" data-thumb="{{ forloop.index0 }}" aria-label="Show image {{ forloop.index }} of {{ product.media.size }}"{% if forloop.first %} aria-current="true"{% endif %}>
+                {{ media.preview_image | image_url: width: 200 | image_tag: loading: 'lazy', alt: '' }}
+              </button>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      <div class="hyrox-product__stage">
+        {% if gallery_badge != blank %}<span class="hyrox-product__badge">{{ gallery_badge }}</span>{% endif %}
+
+        <div class="hyrox-product__track" data-track tabindex="0" aria-label="{{ product.title | escape }} images">
+          {% for media in product.media %}
+            <div class="hyrox-product__slide" data-media-id="{{ media.id }}">
+              {%- assign media_alt = media.alt | default: product.title -%}
+              {%- if forloop.first -%}
+                {{ media.preview_image | image_url: width: 1400 | image_tag: widths: '540, 720, 900, 1100, 1400', sizes: '(max-width: 900px) 100vw, 50vw', fetchpriority: 'high', alt: media_alt }}
+              {%- else -%}
+                {{ media.preview_image | image_url: width: 1400 | image_tag: widths: '540, 720, 900, 1100, 1400', sizes: '(max-width: 900px) 100vw, 50vw', loading: 'lazy', alt: media_alt }}
+              {%- endif -%}
+            </div>
+          {% else %}
+            <div class="hyrox-product__slide">{{ 'product-1' | placeholder_svg_tag: 'hyrox-product__placeholder' }}</div>
+          {% endfor %}
+        </div>
+
+        {% if product.media.size > 1 %}
+          <span class="hyrox-product__counter" aria-hidden="true"><span data-counter>1</span> / {{ product.media.size }}</span>
+          <div class="hyrox-product__arrows">
+            <button type="button" class="hyrox-product__arrow" data-prev aria-label="Previous image">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M17 10H3M9 4l-6 6 6 6"/></svg>
+            </button>
+            <button type="button" class="hyrox-product__arrow" data-next aria-label="Next image">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10h14M11 4l6 6-6 6"/></svg>
+            </button>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {%- comment -%} Info {%- endcomment -%}
+    <div class="hyrox-product__info">
+      <h1 class="hyrox-product__title">{{ product.title }}</h1>
+
+      {% if rating != blank %}
+        <p class="hyrox-product__rating">
+          <span class="hyrox-product__stars" role="img" aria-label="Rated {{ rating | round: 1 }} out of 5">
+            {% for i in (1..5) %}<span{% if i > rating_stars %} class="is-empty"{% endif %}>★</span>{% endfor %}
+          </span>
+          {% if rating_count != blank %}
+            <a href="{{ section.settings.reviews_anchor | default: '#reviews' }}">{{ rating_count }} {% if rating_count == 1 %}review{% else %}reviews{% endif %}</a>
+          {% endif %}
+        </p>
+      {% endif %}
+
+      <p class="hyrox-product__price">
+        {% if product.price_varies %}From {% endif %}{{ product.price_min | money }}
+        {% if product.compare_at_price_min > product.price_min %}<s>{{ product.compare_at_price_min | money }}</s>{% endif %}
+      </p>
+
+      {% unless product.has_only_default_variant %}
+        {% for option in product.options_with_values %}
+          {%- assign option_index = forloop.index0 -%}
+          <div class="hyrox-product__option" role="radiogroup" aria-labelledby="HyroxOption-{{ section.id }}-{{ option_index }}" data-option="{{ option_index }}">
+            <p id="HyroxOption-{{ section.id }}-{{ option_index }}" class="hyrox-product__label">
+              {{ option.name }}: <span data-option-selected>{{ option.selected_value }}</span>
+            </p>
+            <div class="hyrox-product__values">
+              {% for value in option.values %}
+                <label class="hyrox-product__value{% unless value.available %} is-unavailable{% endunless %}">
+                  <input
+                    type="radio"
+                    class="hyrox-product__radio"
+                    name="HyroxOption-{{ section.id }}-{{ option_index }}"
+                    value="{{ value | escape }}"
+                    {% if value.selected %}checked{% endif %}
+                  >
+                  <span class="hyrox-product__value-name">{{ value }}</span>
+                  <span class="hyrox-product__value-price" data-value-price>{% if value.variant %}{{ value.variant.price | money }}{% endif %}</span>
+                </label>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      {% endunless %}
+
+      {% form 'product', product, class: 'hyrox-product__form', data-product-form: '', novalidate: 'novalidate' %}
+        <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
+        <p class="hyrox-product__label">Quantity</p>
+        <div class="hyrox-product__buy">
+          <div class="hyrox-product__quantity">
+            <button type="button" data-qty-minus aria-label="Decrease quantity">−</button>
+            <input type="number" name="quantity" value="1" min="1" inputmode="numeric" aria-label="Quantity" data-qty>
+            <button type="button" data-qty-plus aria-label="Increase quantity">+</button>
+          </div>
+          <button type="submit" class="hyrox-product__add" data-add{% unless current_variant.available %} disabled{% endunless %}>
+            <span data-add-text>{% if current_variant.available %}Add to Cart{% else %}Sold out{% endif %}</span>
+            <span data-add-price>{{ current_variant.price | money }}</span>
+          </button>
+        </div>
+        <p class="hyrox-product__status" role="status" aria-live="polite" data-status></p>
+      {% endform %}
+
+      {%- comment -%} Tabs {%- endcomment -%}
+      {%- liquid
+        capture warranty_html
+          if warranty != blank
+            if warranty.type contains 'rich_text'
+              echo warranty | metafield_tag
+            else
+              echo warranty.value | newline_to_br
+            endif
+          else
+            echo section.settings.warranty_fallback
+          endif
+        endcapture
+
+        capture specs_html
+          if specs != blank
+            if specs.type contains 'rich_text'
+              echo specs | metafield_tag
+            else
+              echo specs.value | newline_to_br
+            endif
+          else
+            echo section.settings.specs_fallback
+          endif
+        endcapture
+
+        assign warranty_html = warranty_html | strip
+        assign specs_html = specs_html | strip
+      -%}
+      <div class="hyrox-product__tabs" data-tabs>
+        <div class="hyrox-product__tablist" role="tablist" aria-label="Product details">
+          <button type="button" role="tab" id="HyroxTab-{{ section.id }}-description" aria-controls="HyroxPanel-{{ section.id }}-description" aria-selected="true">Description</button>
+          {% if warranty_html != blank %}<button type="button" role="tab" id="HyroxTab-{{ section.id }}-warranty" aria-controls="HyroxPanel-{{ section.id }}-warranty" aria-selected="false" tabindex="-1">Warranty</button>{% endif %}
+          {% if specs_html != blank %}<button type="button" role="tab" id="HyroxTab-{{ section.id }}-specs" aria-controls="HyroxPanel-{{ section.id }}-specs" aria-selected="false" tabindex="-1">Specs</button>{% endif %}
+        </div>
+        <div class="hyrox-product__panel rte" role="tabpanel" id="HyroxPanel-{{ section.id }}-description" aria-labelledby="HyroxTab-{{ section.id }}-description">{{ product.description }}</div>
+        {% if warranty_html != blank %}<div class="hyrox-product__panel rte" role="tabpanel" id="HyroxPanel-{{ section.id }}-warranty" aria-labelledby="HyroxTab-{{ section.id }}-warranty" hidden>{{ warranty_html }}</div>{% endif %}
+        {% if specs_html != blank %}<div class="hyrox-product__panel rte" role="tabpanel" id="HyroxPanel-{{ section.id }}-specs" aria-labelledby="HyroxTab-{{ section.id }}-specs" hidden>{{ specs_html }}</div>{% endif %}
+      </div>
+
+      {%- comment -%} Bundles {%- endcomment -%}
+      {% if bundle_products != blank %}
+        <div class="hyrox-product__bundles">
+          <h2 class="hyrox-product__label">{{ section.settings.bundle_heading }}</h2>
+          <ul class="hyrox-product__bundle-grid" role="list">
+            {% for bundle in bundle_products limit: 4 %}
+              {% if bundle.id != product.id %}
+                <li>{% render 'hyrox-product-card', product: bundle, badge_rules: section.settings.badge_rules, compact: true, sizes: '(max-width: 900px) 50vw, 20vw' %}</li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {%- comment -%} Floating add to cart: shown once the main buy button scrolls out of view. {%- endcomment -%}
+  {%- assign sticky_image = current_variant.featured_image | default: product.featured_image -%}
+  <div class="hyrox-sticky-atc" data-sticky inert aria-label="Quick add to cart" role="region">
+    <div class="hyrox-sticky-atc__inner">
+      {% if sticky_image %}
+        <img class="hyrox-sticky-atc__image" src="{{ sticky_image | image_url: width: 160 }}" alt="" width="72" height="72" loading="lazy" data-sticky-image>
+      {% endif %}
+      <div class="hyrox-sticky-atc__info">
+        <p class="hyrox-sticky-atc__title">{{ product.title }}</p>
+        <p class="hyrox-sticky-atc__meta">
+          {%- unless product.has_only_default_variant -%}<span data-sticky-variant>{{ current_variant.title }}</span> {% endunless -%}
+          × <span data-sticky-qty>1</span> · <span data-sticky-meta-price>{{ current_variant.price | money }}</span>
+        </p>
+      </div>
+      <button type="button" class="hyrox-sticky-atc__button" data-sticky-add{% unless current_variant.available %} disabled{% endunless %}>
+        <span data-sticky-text>{% if current_variant.available %}Add to Cart{% else %}Sold out{% endif %}</span>
+        <span data-sticky-price>{{ current_variant.price | money }}</span>
+      </button>
+    </div>
+  </div>
+</hyrox-product>
+
+{% schema %}
+{
+  "name": "HYROX product",
+  "tag": "section",
+  "class": "hyrox-main-product-section",
+  "settings": [
+    { "type": "checkbox", "id": "show_breadcrumbs", "label": "Show breadcrumbs", "default": true },
+    { "type": "text", "id": "gallery_badge", "label": "Image badge", "default": "Official HYROX equipment", "info": "A product's custom.gallery_badge metafield overrides this. Leave blank to hide." },
+    { "type": "text", "id": "reviews_anchor", "label": "Reviews link", "default": "#reviews" },
+    { "type": "header", "content": "Tabs" },
+    { "type": "paragraph", "content": "Warranty and Specs use the product metafields custom.warranty and custom.specs. The fallbacks below show when a product has none. Empty tabs are hidden." },
+    { "type": "richtext", "id": "warranty_fallback", "label": "Warranty fallback", "default": "<p>Covered by our manufacturer warranty against defects in materials and workmanship. Contact our support team with your order number to start a claim.</p>" },
+    { "type": "richtext", "id": "specs_fallback", "label": "Specs fallback" },
+    { "type": "header", "content": "Bundles" },
+    { "type": "text", "id": "bundle_heading", "label": "Heading", "default": "Save with a bundle" },
+    { "type": "product_list", "id": "bundle_products", "label": "Bundle products", "limit": 4, "info": "A product's custom.bundles metafield (list of products) overrides this." },
+    { "type": "textarea", "id": "badge_rules", "label": "Badge rules", "info": "One per line: product tag | Badge text", "default": "$100 Gift Card | $100 Gift Card\nFree Shipping | Free Shipping" }
+  ]
+}
+{% endschema %}

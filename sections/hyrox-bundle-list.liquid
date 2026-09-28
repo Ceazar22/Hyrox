@@ -1,0 +1,47 @@
+{{ 'hyrox-bundle-list.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'hyrox-product-slider.js' | asset_url }}" defer></script>
+
+<div class="hyrox-bundle-list">
+  <header class="hyrox-bundle-list__hero">
+    <p class="hyrox-bundle-list__eyebrow">Shop by training need</p>
+    <h2 class="hyrox-bundle-list__title">
+      <span>Build Your</span>
+      <span class="hyrox-bundle-list__highlight">Race Setup</span>
+    </h2>
+  </header>
+
+  {% render 'hyrox-product-row', heading: 'Complete Division Bundles', description: 'Every station weight for your race division, in one order.', products: section.settings.products, badge: section.settings.division_badge, shop_all_text: section.settings.shop_all_text, shop_all_link: section.settings.division_link %}
+
+  {% render 'hyrox-product-row', heading: 'Station Starter Kits', description: 'Focused bundles for power, accuracy and the fundamentals.', products: section.settings.starter_products, badge: section.settings.starter_badge, shop_all_text: section.settings.shop_all_text, shop_all_link: section.settings.starter_link %}
+
+  {% render 'hyrox-product-row', heading: 'Single Competition Stations', description: 'Add the exact piece your weakest station needs.', products: section.settings.station_products, shop_all_text: section.settings.shop_all_text, shop_all_link: section.settings.station_link %}
+
+  {% render 'hyrox-product-row', heading: 'Run & Gym Floor', description: 'Commercial-grade tread, turf and dumbbells for serious setups.', products: section.settings.gym_products, shop_all_text: section.settings.shop_all_text, shop_all_link: section.settings.gym_link %}
+</div>
+
+{% schema %}
+{
+  "name": "HYROX race setup",
+  "tag": "section",
+  "class": "hyrox-bundle-list-section",
+  "settings": [
+    { "type": "header", "content": "Complete division bundles" },
+    { "type": "product_list", "id": "products", "label": "Bundle products", "limit": 12 },
+    { "type": "text", "id": "division_badge", "label": "Badge", "default": "$100 GIFT CARD" },
+    { "type": "url", "id": "division_link", "label": "Shop all link" },
+    { "type": "header", "content": "Station starter kits" },
+    { "type": "product_list", "id": "starter_products", "label": "Starter kit products", "limit": 12 },
+    { "type": "text", "id": "starter_badge", "label": "Badge", "default": "FREE SHIPPING" },
+    { "type": "url", "id": "starter_link", "label": "Shop all link" },
+    { "type": "header", "content": "Single competition stations" },
+    { "type": "product_list", "id": "station_products", "label": "Station products", "limit": 12 },
+    { "type": "url", "id": "station_link", "label": "Shop all link" },
+    { "type": "header", "content": "Run and gym floor" },
+    { "type": "product_list", "id": "gym_products", "label": "Gym products", "limit": 12 },
+    { "type": "url", "id": "gym_link", "label": "Shop all link" },
+    { "type": "header", "content": "Shared settings" },
+    { "type": "text", "id": "shop_all_text", "label": "Shop all link text", "default": "Shop All" }
+  ],
+  "presets": [{ "name": "HYROX race setup" }]
+}
+{% endschema %}

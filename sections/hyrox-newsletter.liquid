@@ -1,0 +1,72 @@
+{{ 'hyrox-newsletter.css' | asset_url | stylesheet_tag }}
+
+<div class="hyrox-newsletter">
+  <div class="hyrox-newsletter__intro">
+    {% if section.settings.eyebrow != blank %}
+      <p class="hyrox-newsletter__eyebrow">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <h2 class="hyrox-newsletter__title">
+      {% if section.settings.title != blank %}<span>{{ section.settings.title }}</span>{% endif %}
+      {% if section.settings.highlight != blank %}<span class="hyrox-newsletter__highlight">{{ section.settings.highlight }}</span>{% endif %}
+    </h2>
+    {% if section.settings.text != blank %}
+      <div class="hyrox-newsletter__text">{{ section.settings.text }}</div>
+    {% endif %}
+  </div>
+
+  {%- assign form_id = 'HyroxNewsletter-' | append: section.id -%}
+  {% form 'customer', id: form_id, class: 'hyrox-newsletter__form' %}
+    <input type="hidden" name="contact[tags]" value="newsletter">
+    <label class="hyrox-newsletter__label" for="HyroxNewsletterEmail-{{ section.id }}">{{ section.settings.label }}</label>
+    <div class="hyrox-newsletter__field">
+      <input
+        id="HyroxNewsletterEmail-{{ section.id }}"
+        class="hyrox-newsletter__input"
+        type="email"
+        name="contact[email]"
+        placeholder="{{ section.settings.placeholder }}"
+        autocomplete="email"
+        autocapitalize="off"
+        spellcheck="false"
+        required
+        {% if form.errors %}aria-invalid="true" aria-describedby="HyroxNewsletterStatus-{{ section.id }}"{% endif %}
+      >
+      <button type="submit" class="hyrox-newsletter__button">{{ section.settings.button_text }}</button>
+    </div>
+
+    {% if form.errors %}
+      <p id="HyroxNewsletterStatus-{{ section.id }}" class="hyrox-newsletter__status hyrox-newsletter__status--error" role="alert">
+        {{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}
+      </p>
+    {% elsif form.posted_successfully? %}
+      <p class="hyrox-newsletter__status hyrox-newsletter__status--success" role="status">{{ section.settings.success_text }}</p>
+    {% endif %}
+
+    {% if section.settings.note != blank %}
+      <div class="hyrox-newsletter__note">{{ section.settings.note }}</div>
+    {% endif %}
+  {% endform %}
+</div>
+
+{% schema %}
+{
+  "name": "HYROX newsletter",
+  "tag": "section",
+  "class": "hyrox-newsletter-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Join the community" },
+    { "type": "text", "id": "title", "label": "Heading", "default": "Train hard." },
+    { "type": "text", "id": "highlight", "label": "Highlighted heading", "default": "Miss nothing." },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>New programs, HYROX training guides, equipment launches and member stories, delivered to your inbox.</p>" },
+    { "type": "header", "content": "Form" },
+    { "type": "text", "id": "label", "label": "Field label", "default": "Email address" },
+    { "type": "text", "id": "placeholder", "label": "Placeholder", "default": "you@example.com" },
+    { "type": "text", "id": "button_text", "label": "Button text", "default": "Subscribe" },
+    { "type": "text", "id": "success_text", "label": "Success message", "default": "Thanks for subscribing. You're on the list." },
+    { "type": "richtext", "id": "note", "label": "Note", "default": "<p>Unsubscribe any time. View our <a href=\"/policies/privacy-policy\">Privacy Policy</a>.</p>" }
+  ],
+  "presets": [
+    { "name": "HYROX newsletter" }
+  ]
+}
+{% endschema %}

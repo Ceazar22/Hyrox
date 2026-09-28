@@ -9,6 +9,7 @@
   --header-yellow: #f2ff00;
   --header-rule: #333333;
   width: 100%;
+  background: var(--header-black);
   font-family: var(--font-body--family), Inter, Arial, sans-serif;
 }
 
@@ -28,7 +29,9 @@
 .hyrox-header__announcement-slide {
   display: none;
   width: 100%;
+  max-width: 1440px;
   min-height: 34px;
+  margin-inline: auto;
   align-items: center;
   justify-content: center;
   gap: 13px;
@@ -54,9 +57,11 @@
 .hyrox-header__bar {
   display: flex;
   width: 100%;
+  max-width: 1440px;
   min-height: 68px;
   align-items: center;
   gap: 0;
+  margin-inline: auto;
   border-bottom: 1px solid var(--header-rule);
   padding: 0 40px;
   color: var(--header-white);

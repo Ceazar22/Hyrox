@@ -15,6 +15,36 @@
   --hyrox-muted-on-black: #bcbcbc;
   --hyrox-rule-on-black: #333333;
   --hyrox-rule: 2px;
+  --hyrox-content-width: 1440px;
+}
+
+/* One content width across every theme page-width mode. Horizon's section
+ * grid keeps .section-background and explicit full-width media edge-to-edge. */
+.page-width-wide,
+.page-width-normal,
+.page-width-narrow {
+  --page-content-width: var(--hyrox-content-width);
+  --page-width: calc(var(--page-content-width) + (var(--page-margin) * 2));
+}
+
+/* Custom sections use the same container contract. Their background layers
+ * remain on the full-width section wrapper. */
+.hyrox-header__bar,
+.hyrox-header__announcement-slide,
+.hyrox-hero__content,
+.hyrox-proof-strip {
+  width: 100%;
+  max-width: var(--hyrox-content-width);
+  margin-inline: auto;
+}
+
+.hyrox-hero,
+.hyrox-hero__media,
+.section-background,
+.background-media,
+.hero__media-wrapper {
+  width: 100%;
+  max-width: none;
 }
 
 body {

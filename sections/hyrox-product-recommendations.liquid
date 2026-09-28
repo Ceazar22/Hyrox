@@ -1,0 +1,98 @@
+{{ 'hyrox-product-list.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'hyrox-product-slider.js' | asset_url }}" defer></script>
+<script src="{{ 'hyrox-product-recommendations.js' | asset_url }}" defer></script>
+
+{%- liquid
+  # The page renders fallback products immediately (picked products → same collection → all products).
+  # JS then fetches Shopify's recommendations and swaps them in only when there are some.
+  assign rec_source = 'fallback'
+  assign rec_products = nil
+  if recommendations.performed? and recommendations.products.size > 0
+    assign rec_products = recommendations.products
+    assign rec_source = 'recommendations'
+  endif
+  if rec_products == nil
+    assign rec_products = section.settings.fallback_products
+    if rec_products == blank
+      assign fallback_collection = product.collections.first | default: collections.all
+      assign rec_products = fallback_collection.products
+    endif
+  endif
+-%}
+
+<hyrox-product-recommendations
+  class="hyrox-recommendations"
+  data-product-id="{{ product.id }}"
+  data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.limit }}&intent=related"
+>
+  {% if rec_products != blank %}
+    <hyrox-product-slider class="hyrox-product-list" data-source="{{ rec_source }}">
+      <header class="hyrox-product-list__header">
+        <div>
+          {% if section.settings.eyebrow != blank %}<p class="hyrox-product-list__eyebrow">{{ section.settings.eyebrow }}</p>{% endif %}
+          <h2 class="hyrox-product-list__title">
+            {{ section.settings.heading }}
+            {% if section.settings.highlight != blank %}<span class="hyrox-product-list__highlight">{{ section.settings.highlight }}</span>{% endif %}
+          </h2>
+          {% if section.settings.shop_all_text != blank %}
+            <a class="hyrox-product-list__all-link" href="{{ section.settings.shop_all_link | default: routes.all_products_collection_url }}">{{ section.settings.shop_all_text }}</a>
+          {% endif %}
+        </div>
+        <div class="hyrox-product-list__controls" aria-label="Recommended products slider controls">
+          <button type="button" class="hyrox-product-list__control" data-slider-previous aria-label="Previous product">
+            <svg viewBox="0 0 40 24" aria-hidden="true"><path d="M38 12H3M11 4l-8 8 8 8"/></svg>
+          </button>
+          <button type="button" class="hyrox-product-list__control" data-slider-next aria-label="Next product">
+            <svg viewBox="0 0 40 24" aria-hidden="true"><path d="M2 12h35M29 4l8 8-8 8"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="hyrox-product-list__grid" data-product-scroller tabindex="0">
+        {%- assign shown = 0 -%}
+        {% for rec in rec_products %}
+          {%- liquid
+            if rec.id == product.id or shown >= section.settings.limit
+              continue
+            endif
+            assign shown = shown | plus: 1
+            assign rating = rec.metafields.reviews.rating.value.rating
+            assign image_alt = rec.featured_image.alt | default: rec.title
+          -%}
+          <article class="hyrox-product-list__card" data-slider-card data-product-id="{{ rec.id }}">
+            <a class="hyrox-product-list__media" href="{{ rec.url }}" aria-label="{{ rec.title | escape }}">
+              {% if rec.featured_image != blank %}
+                {{ rec.featured_image | image_url: width: 1000 | image_tag: class: 'hyrox-product-list__image', widths: '360, 540, 720, 1000', sizes: '(max-width: 600px) 84vw, (max-width: 900px) 50vw, 25vw', loading: 'lazy', decoding: 'async', alt: image_alt }}
+              {% else %}
+                {{ 'product-1' | placeholder_svg_tag: 'hyrox-product-list__placeholder' }}
+              {% endif %}
+            </a>
+            {% if rating != blank %}
+              <div class="hyrox-product-list__rating"><span class="hyrox-product-list__rating-star" aria-hidden="true">★</span><span>{{ rating | round: 1 }} rating</span></div>
+            {% endif %}
+            <h3 class="hyrox-product-list__product-title">{{ rec.title }}</h3>
+            <p class="hyrox-product-list__price">{% if rec.price_varies %}From {% endif %}{{ rec.price_min | money }}</p>
+          </article>
+        {% endfor %}
+      </div>
+    </hyrox-product-slider>
+  {% endif %}
+</hyrox-product-recommendations>
+
+{% schema %}
+{
+  "name": "HYROX recommendations",
+  "tag": "section",
+  "class": "hyrox-product-list-section hyrox-recommendations-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Complete your setup" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "You may" },
+    { "type": "text", "id": "highlight", "label": "Highlighted heading", "default": "also like" },
+    { "type": "range", "id": "limit", "label": "Maximum products", "min": 4, "max": 10, "step": 1, "default": 10 },
+    { "type": "text", "id": "shop_all_text", "label": "Shop all link text", "default": "Shop all HYROX equipment" },
+    { "type": "url", "id": "shop_all_link", "label": "Shop all link" },
+    { "type": "product_list", "id": "fallback_products", "label": "Fallback products", "limit": 10, "info": "Shown when Shopify has no recommendations for a product yet." }
+  ],
+  "presets": [{ "name": "HYROX recommendations" }]
+}
+{% endschema %}

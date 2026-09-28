@@ -1,0 +1,57 @@
+{{ 'hyrox-why-official.css' | asset_url | stylesheet_tag }}
+
+<div class="hyrox-why-official">
+  <header class="hyrox-why-official__header">
+    <h2 class="hyrox-why-official__title">
+      <span>Why Buy</span>
+      <span class="hyrox-why-official__highlight">Official</span>
+    </h2>
+  </header>
+
+  <div class="hyrox-why-official__grid">
+    {% for block in section.blocks %}
+      <article class="hyrox-why-official__card" {{ block.shopify_attributes }}>
+        <div class="hyrox-why-official__media">
+          {% if block.settings.image != blank %}
+            {{ block.settings.image | image_url: width: 1000 | image_tag: class: 'hyrox-why-official__image', widths: '360, 540, 720, 1000', sizes: '(max-width: 749px) 100vw, 25vw', loading: 'lazy', alt: block.settings.image.alt | default: block.settings.heading }}
+          {% else %}
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'hyrox-why-official__placeholder' }}
+          {% endif %}
+        </div>
+        <div class="hyrox-why-official__content">
+          <h3>{{ block.settings.heading }}</h3>
+          <p>{{ block.settings.text }}</p>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "HYROX why official",
+  "tag": "section",
+  "class": "hyrox-why-official-section",
+  "max_blocks": 2,
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "15-Day Returns" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Try your equipment at home with our 15-day no-questions-asked return policy." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "HYROX why official",
+      "blocks": [
+        { "type": "benefit", "settings": { "heading": "15-Day Returns", "text": "Try your equipment at home with our 15-day no-questions-asked return policy." } },
+        { "type": "benefit", "settings": { "heading": "Expert Support", "text": "Help when you need it from a team with 20 years of experience building strength training equipment." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

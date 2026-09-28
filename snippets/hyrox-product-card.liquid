@@ -1,0 +1,59 @@
+{%- comment -%}
+  HYROX product card.
+  Params: product (required), badge_rules (optional textarea: "tag | Label" per line), sizes (optional),
+  compact (optional: hides the rating/type row and shows the rating next to the price)
+{%- endcomment -%}
+{%- liquid
+  assign badge = product.metafields.custom.badge.value
+  if badge == blank and badge_rules != blank
+    assign rules = badge_rules | newline_to_br | split: '<br />'
+    for rule in rules
+      assign parts = rule | strip | split: '|'
+      assign rule_tag = parts[0] | strip
+      if rule_tag != blank and product.tags contains rule_tag
+        assign badge = parts[1] | strip | default: rule_tag
+        break
+      endif
+    endfor
+  endif
+
+  assign rating = product.metafields.reviews.rating.value.rating
+  assign show_meta = false
+  if compact != true
+    if rating != blank or product.type != blank
+      assign show_meta = true
+    endif
+  endif
+
+  assign image_alt = product.featured_image.alt | default: product.title
+  assign image_sizes = sizes | default: '(max-width: 640px) 50vw, (max-width: 1200px) 33vw, 22vw'
+-%}
+
+<article class="hyrox-card{% if compact %} hyrox-card--compact{% endif %}">
+  <a class="hyrox-card__media" href="{{ product.url }}" aria-label="{{ product.title | escape }}">
+    {% if badge != blank %}<span class="hyrox-card__badge">{{ badge }}</span>{% endif %}
+    {% if product.featured_image != blank %}
+      {{ product.featured_image | image_url: width: 800 | image_tag: class: 'hyrox-card__image', widths: '300, 400, 540, 800', sizes: image_sizes, loading: 'lazy', alt: image_alt }}
+    {% else %}
+      {{ 'product-1' | placeholder_svg_tag: 'hyrox-card__image hyrox-card__image--placeholder' }}
+    {% endif %}
+  </a>
+
+  {% if show_meta %}
+    <p class="hyrox-card__meta">
+      {% if rating != blank %}<span class="hyrox-card__rating"><span aria-hidden="true">★</span> {{ rating | round: 1 }}</span>{% endif %}
+      {% if rating != blank and product.type != blank %}<span aria-hidden="true">·</span>{% endif %}
+      {% if product.type != blank %}<span>{{ product.type }}</span>{% endif %}
+    </p>
+  {% endif %}
+
+  <h3 class="hyrox-card__title"><a href="{{ product.url }}">{{ product.title }}</a></h3>
+
+  <p class="hyrox-card__price">
+    {% if product.price_varies %}From {% endif %}{{ product.price_min | money }}
+    {% if product.compare_at_price_min > product.price_min %}
+      <s class="hyrox-card__compare">{{ product.compare_at_price_min | money }}</s>
+    {% endif %}
+    {% if compact and rating != blank %}<span class="hyrox-card__rating-inline"><span aria-hidden="true">★</span> {{ rating | round: 1 }}</span>{% endif %}
+  </p>
+</article>

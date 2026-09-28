@@ -1,0 +1,78 @@
+{{ 'hyrox-product-list.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'hyrox-product-slider.js' | asset_url }}" defer></script>
+
+<hyrox-product-slider class="hyrox-product-list">
+  <header class="hyrox-product-list__header">
+    <div>
+      <p class="hyrox-product-list__eyebrow">The Race Stations</p>
+      <h2 class="hyrox-product-list__title">Train on <span class="hyrox-product-list__highlight">What You Race</span></h2>
+      {% if section.settings.shop_all_text != blank %}
+        <a class="hyrox-product-list__all-link" href="{{ section.settings.shop_all_link | default: routes.all_products_collection_url }}">{{ section.settings.shop_all_text }}</a>
+      {% endif %}
+    </div>
+    <div class="hyrox-product-list__controls" aria-label="Product slider controls">
+      <button type="button" class="hyrox-product-list__control" data-slider-previous aria-label="Previous product">
+        <svg viewBox="0 0 40 24" aria-hidden="true"><path d="M38 12H3M11 4l-8 8 8 8"/></svg>
+      </button>
+      <button type="button" class="hyrox-product-list__control" data-slider-next aria-label="Next product">
+        <svg viewBox="0 0 40 24" aria-hidden="true"><path d="M2 12h35M29 4l8 8-8 8"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="hyrox-product-list__grid" data-product-scroller tabindex="0">
+    {% if section.settings.products != blank %}
+      {% for product in section.settings.products %}
+        {% liquid
+          assign rating = '4.9'
+          if forloop.first
+            assign rating = '5.0'
+          endif
+          if product.metafields.reviews.rating.value.rating != blank
+            assign rating = product.metafields.reviews.rating.value.rating
+          endif
+          assign short_title = product.title | replace: 'HYROX OFFICIAL COMPETITION ', '' | replace: 'HYROX OFFICIAL ', '' | replace: 'HYROX ', ''
+        %}
+        <article class="hyrox-product-list__card" data-slider-card>
+          <a class="hyrox-product-list__media" href="{{ product.url }}" aria-label="{{ product.title | escape }}">
+            {% if product.featured_image != blank %}
+              {{ product.featured_image | image_url: width: 1000 | image_tag: class: 'hyrox-product-list__image', widths: '360, 540, 720, 1000', sizes: '(max-width: 600px) 84vw, (max-width: 900px) 50vw, 25vw', loading: 'lazy', alt: product.featured_image.alt | default: product.title }}
+            {% else %}
+              {{ 'product-1' | placeholder_svg_tag: 'hyrox-product-list__placeholder' }}
+            {% endif %}
+          </a>
+          <div class="hyrox-product-list__rating"><span class="hyrox-product-list__rating-star">★</span><span>{{ rating }} rating</span></div>
+          <h3 class="hyrox-product-list__product-title">{{ product.title }}</h3>
+          <p class="hyrox-product-list__price">From {{ product.price_min | money }}</p>
+          <a class="hyrox-product-list__button" href="{{ product.url }}"><span>Shop {{ short_title | strip }}</span><span class="hyrox-product-list__button-arrow" aria-hidden="true">→</span></a>
+        </article>
+      {% endfor %}
+    {% else %}
+      {% for i in (1..5) %}
+        <article class="hyrox-product-list__card" data-slider-card>
+          <div class="hyrox-product-list__media">{{ 'product-' | append: i | placeholder_svg_tag: 'hyrox-product-list__placeholder' }}</div>
+          <div class="hyrox-product-list__rating"><span class="hyrox-product-list__rating-star">★</span><span>{% if forloop.first %}5.0{% else %}4.9{% endif %} rating</span></div>
+          <h3 class="hyrox-product-list__product-title">HYROX Official Competition Product</h3>
+          <p class="hyrox-product-list__price">From $0</p>
+          <span class="hyrox-product-list__button"><span>Shop Product</span><span class="hyrox-product-list__button-arrow">→</span></span>
+        </article>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <p class="hyrox-product-list__footnote">All prices in USD. 15-day returns on every order.</p>
+</hyrox-product-slider>
+
+{% schema %}
+{
+  "name": "HYROX product list",
+  "tag": "section",
+  "class": "hyrox-product-list-section",
+  "settings": [
+    { "type": "product_list", "id": "products", "label": "Products", "limit": 12 },
+    { "type": "text", "id": "shop_all_text", "label": "Shop all link text", "default": "Shop all HYROX equipment" },
+    { "type": "url", "id": "shop_all_link", "label": "Shop all link" }
+  ],
+  "presets": [{ "name": "HYROX product list" }]
+}
+{% endschema %}

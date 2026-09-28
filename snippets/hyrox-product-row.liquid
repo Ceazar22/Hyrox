@@ -1,0 +1,58 @@
+<hyrox-product-slider class="hyrox-bundle-list__group">
+  <div class="hyrox-bundle-list__bar">
+    <div>
+      <h3 class="hyrox-bundle-list__subheading">{{ heading }}</h3>
+      <p class="hyrox-bundle-list__description">{{ description }}</p>
+      {% if shop_all_text != blank %}
+        <a class="hyrox-bundle-list__all-link" href="{{ shop_all_link | default: routes.all_products_collection_url }}">{{ shop_all_text }}</a>
+      {% endif %}
+    </div>
+    <div class="hyrox-bundle-list__controls" aria-label="{{ heading | escape }} slider controls">
+      <button type="button" class="hyrox-bundle-list__control" data-slider-previous aria-label="Previous products">
+        <svg viewBox="0 0 40 24" aria-hidden="true"><path d="M38 12H3M11 4l-8 8 8 8"/></svg>
+      </button>
+      <button type="button" class="hyrox-bundle-list__control" data-slider-next aria-label="Next products">
+        <svg viewBox="0 0 40 24" aria-hidden="true"><path d="M2 12h35M29 4l8 8-8 8"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="hyrox-bundle-list__grid" data-product-scroller tabindex="0">
+    {% if products != blank %}
+      {% for product in products %}
+        {% liquid
+          assign rating = '4.9'
+          if product.metafields.reviews.rating.value.rating != blank
+            assign rating = product.metafields.reviews.rating.value.rating
+          endif
+        %}
+        <article class="hyrox-bundle-list__card" data-slider-card>
+          <a class="hyrox-bundle-list__media" href="{{ product.url }}" aria-label="{{ product.title | escape }}">
+            {% if badge != blank %}<span class="hyrox-bundle-list__badge">{{ badge }}</span>{% endif %}
+            {% if product.featured_image != blank %}
+              {{ product.featured_image | image_url: width: 1000 | image_tag: class: 'hyrox-bundle-list__image', widths: '360, 540, 720, 1000', sizes: '(max-width: 600px) 84vw, (max-width: 900px) 50vw, 25vw', loading: 'lazy', alt: product.featured_image.alt | default: product.title }}
+            {% else %}
+              {{ 'product-1' | placeholder_svg_tag: 'hyrox-bundle-list__placeholder' }}
+            {% endif %}
+          </a>
+          <h4 class="hyrox-bundle-list__product-title"><a href="{{ product.url }}">{{ product.title }}</a></h4>
+          <div class="hyrox-bundle-list__meta">
+            <span>{% if product.price_varies %}From {% endif %}{{ product.price_min | money }}</span>
+            <span class="hyrox-bundle-list__rating">★ {{ rating }}</span>
+          </div>
+        </article>
+      {% endfor %}
+    {% else %}
+      {% for i in (1..5) %}
+        <article class="hyrox-bundle-list__card" data-slider-card>
+          <div class="hyrox-bundle-list__media">
+            {% if badge != blank %}<span class="hyrox-bundle-list__badge">{{ badge }}</span>{% endif %}
+            {{ 'product-' | append: i | placeholder_svg_tag: 'hyrox-bundle-list__placeholder' }}
+          </div>
+          <h4 class="hyrox-bundle-list__product-title">HYROX {{ heading }} Product {{ i }}</h4>
+          <div class="hyrox-bundle-list__meta"><span>From $0</span><span class="hyrox-bundle-list__rating">★ 4.9</span></div>
+        </article>
+      {% endfor %}
+    {% endif %}
+  </div>
+</hyrox-product-slider>

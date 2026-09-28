@@ -1,0 +1,52 @@
+{{ 'hyrox-proof-strip.css' | asset_url | stylesheet_tag }}
+
+{% if section.blocks.size > 0 %}
+  <div class="hyrox-proof-strip" role="group" aria-label="Why shop HYROX">
+    <div class="hyrox-proof-strip__viewport">
+      <div class="hyrox-proof-strip__track">
+        {% for duplicate in (1..2) %}
+          <div
+            class="hyrox-proof-strip__group"
+            style="--proof-count: {{ section.blocks.size }}"
+            {% if duplicate == 2 %}aria-hidden="true"{% endif %}
+          >
+            {% for block in section.blocks %}
+              <div class="hyrox-proof-strip__item"{% if duplicate == 1 %} {{ block.shopify_attributes }}{% endif %}>
+                <span class="hyrox-proof-strip__number">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+                <span class="hyrox-proof-strip__text">{{ block.settings.text }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "HYROX proof strip",
+  "tag": "section",
+  "class": "hyrox-proof-strip-section",
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Proof point",
+      "limit": 6,
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Official HYROX competition equipment" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "HYROX proof strip",
+      "blocks": [
+        { "type": "item", "settings": { "text": "Official HYROX competition equipment" } },
+        { "type": "item", "settings": { "text": "Station-specific prep for every race weight" } },
+        { "type": "item", "settings": { "text": "Race-day familiarity: train on what you race on" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,758 @@
+.hyrox-main-product-section {
+  display: block;
+  width: 100%;
+  background: #ffffff;
+}
+
+.hyrox-product {
+  display: block;
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  color: #171717;
+  font-family: var(--font-body--family), Inter, Arial, sans-serif;
+}
+
+.hyrox-product a {
+  color: inherit;
+}
+
+.hyrox-product :is(a, button, input, [tabindex]):focus-visible {
+  outline: 2px solid #171717;
+  outline-offset: 2px;
+}
+
+/* Breadcrumbs */
+.hyrox-product__breadcrumbs {
+  padding: 18px 40px;
+  border-bottom: 2px solid #171717;
+}
+
+.hyrox-product__breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.hyrox-product__breadcrumbs li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #777777;
+}
+
+.hyrox-product__breadcrumbs li + li::before {
+  content: "/";
+}
+
+.hyrox-product__breadcrumbs a {
+  text-decoration: none;
+}
+
+.hyrox-product__breadcrumbs a:hover {
+  color: #171717;
+  text-decoration: underline;
+}
+
+.hyrox-product__breadcrumbs [aria-current="page"] {
+  color: #171717;
+  font-weight: 800;
+}
+
+/* Layout */
+.hyrox-product__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  border-bottom: 2px solid #171717;
+}
+
+.hyrox-product__gallery {
+  position: sticky;
+  top: 0;
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr);
+  align-items: start;
+  align-self: start;
+  gap: 12px;
+  padding: 32px 40px 40px;
+}
+
+.hyrox-product__gallery:not(:has(.hyrox-product__thumbs)) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.hyrox-product__info {
+  min-width: 0;
+  padding: 32px 40px 48px;
+  border-left: 2px solid #171717;
+}
+
+/* Thumbnails */
+.hyrox-product__thumbs {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  max-height: 640px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  scrollbar-width: none;
+}
+
+.hyrox-product__thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 0;
+  background: #f2f2f0;
+  cursor: pointer;
+}
+
+.hyrox-product__thumb[aria-current="true"] {
+  border-color: #171717;
+}
+
+.hyrox-product__thumb:hover {
+  border-color: #777777;
+}
+
+.hyrox-product__thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Stage */
+.hyrox-product__stage {
+  position: relative;
+  min-width: 0;
+  background: #f2f2f0;
+}
+
+.hyrox-product__track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.hyrox-product__track::-webkit-scrollbar,
+.hyrox-product__thumbs::-webkit-scrollbar {
+  display: none;
+}
+
+.hyrox-product__slide {
+  width: 100%;
+  flex: 0 0 100%;
+  aspect-ratio: 1 / 1;
+  scroll-snap-align: start;
+}
+
+.hyrox-product__slide img,
+.hyrox-product__placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.hyrox-product__badge {
+  position: absolute;
+  z-index: 1;
+  top: 14px;
+  left: 14px;
+  padding: 7px 9px;
+  color: #f2ff00;
+  background: #171717;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.hyrox-product__counter {
+  position: absolute;
+  bottom: 18px;
+  left: 14px;
+  padding: 5px 8px;
+  background: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.hyrox-product__arrows {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  display: flex;
+  gap: 6px;
+}
+
+.hyrox-product__arrow {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  padding: 0;
+  border: 2px solid #171717;
+  border-radius: 0;
+  color: #171717;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.hyrox-product__arrow:hover {
+  background: #f2ff00;
+}
+
+.hyrox-product__arrow svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 2;
+}
+
+/* Info */
+.hyrox-product .hyrox-product__title {
+  margin: 0;
+  color: #171717;
+  font-family: var(--font-heading--family), "Arial Black", sans-serif;
+  font-size: clamp(34px, 3.2vw, 46px);
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.hyrox-product__rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 0;
+  font-size: 14px;
+}
+
+.hyrox-product__stars {
+  letter-spacing: 2px;
+}
+
+.hyrox-product__stars .is-empty {
+  color: #d0d0cc;
+}
+
+.hyrox-product__rating a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.hyrox-product__price {
+  margin: 14px 0 0;
+  font-family: var(--font-heading--family), "Arial Black", sans-serif;
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.hyrox-product__price s {
+  margin-left: 8px;
+  color: #777777;
+  font-size: 0.6em;
+  font-weight: 500;
+}
+
+.hyrox-product .hyrox-product__label {
+  margin: 28px 0 12px;
+  color: #171717;
+  font-family: var(--font-body--family), Inter, Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* Option tiles */
+.hyrox-product__values {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(86px, 1fr));
+  border: 2px solid #171717;
+}
+
+.hyrox-product__value {
+  position: relative;
+  display: flex;
+  min-height: 60px;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  margin: 0 -1px -1px 0;
+  padding: 10px 12px;
+  border-right: 1px solid #171717;
+  border-bottom: 1px solid #171717;
+  cursor: pointer;
+}
+
+.hyrox-product__value:hover {
+  background: #f2f2f0;
+}
+
+.hyrox-product__radio {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.hyrox-product__value-name {
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.hyrox-product__value-price {
+  color: #777777;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.hyrox-product__value-price:empty {
+  display: none;
+}
+
+.hyrox-product__value:has(input:checked) {
+  color: #ffffff;
+  background: #171717;
+}
+
+.hyrox-product__value:has(input:checked) .hyrox-product__value-price {
+  color: #f2ff00;
+}
+
+.hyrox-product__value:has(input:focus-visible) {
+  outline: 2px solid #f2ff00;
+  outline-offset: -5px;
+}
+
+.hyrox-product__value.is-unavailable .hyrox-product__value-name {
+  color: #999999;
+  text-decoration: line-through;
+}
+
+.hyrox-product__value.is-unavailable:has(input:checked) .hyrox-product__value-name {
+  color: #bcbcbc;
+}
+
+/* Buy */
+.hyrox-product__buy {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 10px;
+}
+
+.hyrox-product__quantity {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) 40px;
+  height: 56px;
+  border: 2px solid #171717;
+}
+
+.hyrox-product__quantity button {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  color: #171717;
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.hyrox-product__quantity button:hover {
+  background: #f2f2f0;
+}
+
+.hyrox-product .hyrox-product__quantity input {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: #171717;
+  background: transparent;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 800;
+  text-align: center;
+  appearance: textfield;
+}
+
+.hyrox-product__quantity input::-webkit-inner-spin-button,
+.hyrox-product__quantity input::-webkit-outer-spin-button {
+  margin: 0;
+  appearance: none;
+}
+
+.hyrox-product__add {
+  display: flex;
+  height: 56px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 20px;
+  border: 2px solid #f2ff00;
+  border-radius: 0;
+  color: #171717;
+  background: #f2ff00;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+
+.hyrox-product__add:hover:not(:disabled) {
+  border-color: #171717;
+  color: #ffffff;
+  background: #171717;
+}
+
+.hyrox-product__add:disabled {
+  border-color: #e3e3e0;
+  color: #777777;
+  background: #e3e3e0;
+  cursor: not-allowed;
+}
+
+.hyrox-product__add[aria-busy="true"] {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+.hyrox-product__status {
+  min-height: 1em;
+  margin: 10px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.hyrox-product__status:empty {
+  display: none;
+}
+
+.hyrox-product__status.is-error {
+  color: #b00020;
+}
+
+.hyrox-product__status a {
+  text-decoration: underline;
+}
+
+/* Tabs */
+.hyrox-product__tabs {
+  margin-top: 22px;
+}
+
+.hyrox-product__tablist {
+  display: flex;
+  overflow-x: auto;
+  border-bottom: 2px solid #171717;
+}
+
+.hyrox-product__tablist button {
+  flex: 0 0 auto;
+  padding: 14px 16px;
+  border: 0;
+  border-radius: 0;
+  color: #171717;
+  background: transparent;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.hyrox-product__tablist button:hover {
+  background: #f2f2f0;
+}
+
+.hyrox-product__tablist button[aria-selected="true"] {
+  color: #ffffff;
+  background: #171717;
+  font-weight: 900;
+}
+
+.hyrox-product__panel {
+  padding-top: 20px;
+  color: #3a3a3a;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.hyrox-product__panel > :first-child {
+  margin-top: 0;
+}
+
+.hyrox-product__panel :is(h2, h3, h4, h5, h6) {
+  margin: 20px 0 10px;
+  color: #171717;
+  font-family: var(--font-body--family), Inter, Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+}
+
+.hyrox-product__panel ul {
+  margin: 10px 0;
+  padding-left: 18px;
+}
+
+.hyrox-product__panel li + li {
+  margin-top: 8px;
+}
+
+.hyrox-product__panel em {
+  color: #777777;
+  font-size: 13px;
+}
+
+/* Bundles */
+.hyrox-product__bundles {
+  margin-top: 16px;
+}
+
+.hyrox-product__bundle-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (max-width: 1100px) {
+  .hyrox-product__gallery {
+    grid-template-columns: 64px minmax(0, 1fr);
+    padding-inline: 24px;
+  }
+
+  .hyrox-product__info {
+    padding-inline: 24px;
+  }
+
+  .hyrox-product__breadcrumbs {
+    padding-inline: 24px;
+  }
+}
+
+@media (max-width: 900px) {
+  .hyrox-product__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .hyrox-product__gallery {
+    position: static;
+    grid-template-columns: minmax(0, 1fr);
+    padding: 16px 16px 0;
+  }
+
+  .hyrox-product__thumbs {
+    order: 2;
+    display: flex;
+    max-height: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .hyrox-product__thumbs li {
+    width: 64px;
+    flex: 0 0 64px;
+  }
+
+  .hyrox-product__info {
+    padding: 28px 16px 40px;
+    border-left: 0;
+  }
+
+  .hyrox-product__breadcrumbs {
+    padding: 14px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hyrox-product__buy {
+    grid-template-columns: 112px minmax(0, 1fr);
+  }
+
+  .hyrox-product__add {
+    padding: 0 14px;
+    font-size: 15px;
+  }
+
+  .hyrox-product__bundle-grid {
+    gap: 16px 12px;
+  }
+}
+
+/* Floating add to cart */
+.hyrox-sticky-atc {
+  position: fixed;
+  z-index: 50;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  color: #ffffff;
+  background: #171717;
+  box-shadow: 0 -10px 30px rgb(0 0 0 / 0.18);
+  transform: translateY(100%);
+  visibility: hidden;
+  transition: transform 220ms ease, visibility 0s linear 220ms;
+}
+
+.hyrox-sticky-atc.is-visible {
+  transform: translateY(0);
+  visibility: visible;
+  transition: transform 220ms ease, visibility 0s;
+}
+
+.hyrox-sticky-atc__inner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding: 16px 40px calc(16px + env(safe-area-inset-bottom));
+}
+
+.hyrox-sticky-atc__image {
+  width: 72px;
+  height: 72px;
+  flex: 0 0 72px;
+  object-fit: contain;
+  background: #f2f2f0;
+}
+
+.hyrox-sticky-atc__info {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.hyrox-sticky-atc__title {
+  margin: 0;
+  overflow: hidden;
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.hyrox-sticky-atc__meta {
+  margin: 4px 0 0;
+  color: #bcbcbc;
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.hyrox-sticky-atc__button {
+  display: flex;
+  height: 60px;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 20px;
+  padding: 0 26px;
+  border: 2px solid #f2ff00;
+  border-radius: 0;
+  color: #171717;
+  background: #f2ff00;
+  font: inherit;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+
+.hyrox-sticky-atc__button:hover:not(:disabled) {
+  border-color: #ffffff;
+  color: #171717;
+  background: #ffffff;
+}
+
+.hyrox-sticky-atc__button:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}
+
+.hyrox-sticky-atc__button:disabled {
+  border-color: #3a3a3a;
+  color: #bcbcbc;
+  background: #3a3a3a;
+  cursor: not-allowed;
+}
+
+.hyrox-sticky-atc__button[aria-busy="true"] {
+  cursor: progress;
+  opacity: 0.75;
+}
+
+/* Keep the footer reachable while the bar is showing. */
+body.hyrox-sticky-atc-visible {
+  padding-bottom: 104px;
+}
+
+@media (max-width: 749px) {
+  .hyrox-sticky-atc__inner {
+    gap: 12px;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  }
+
+  .hyrox-sticky-atc__image {
+    display: none;
+  }
+
+  .hyrox-sticky-atc__title {
+    font-size: 14px;
+  }
+
+  .hyrox-sticky-atc__meta {
+    font-size: 13px;
+  }
+
+  .hyrox-sticky-atc__button {
+    height: 52px;
+    gap: 14px;
+    padding: 0 18px;
+    font-size: 16px;
+  }
+
+  body.hyrox-sticky-atc-visible {
+    padding-bottom: 76px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hyrox-sticky-atc,
+  .hyrox-sticky-atc.is-visible {
+    transition: none;
+  }
+}

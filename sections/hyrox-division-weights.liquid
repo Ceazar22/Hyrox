@@ -1,0 +1,133 @@
+{{ 'hyrox-division-weights.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'hyrox-division-weights.js' | asset_url }}" defer></script>
+
+<hyrox-division-weights class="hyrox-division" data-section-id="{{ section.id }}">
+  {% for block in section.blocks %}
+    {% liquid
+      assign division_product = block.settings.product
+      assign button_label = block.settings.button_text
+      if button_label == blank and division_product != blank
+        assign button_label = 'Shop the ' | append: block.settings.tab_label | append: ' Bundle'
+      endif
+      assign button_link = block.settings.button_link
+      if button_link == blank and division_product != blank
+        assign button_link = division_product.url
+      endif
+    %}
+    <div
+      class="hyrox-division__panel{% if forloop.first %} is-active{% endif %}"
+      data-division-panel="{{ block.id }}"
+      {% unless forloop.first %}hidden{% endunless %}
+      {{ block.shopify_attributes }}
+    >
+      <div class="hyrox-division__media">
+        {% if block.settings.image != blank %}
+          {{ block.settings.image | image_url: width: 1800 | image_tag: class: 'hyrox-division__image', widths: '480, 720, 960, 1200, 1800', sizes: '(max-width: 749px) 100vw, 50vw', loading: 'lazy', alt: block.settings.image.alt | default: block.settings.heading }}
+        {% else %}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'hyrox-division__placeholder' }}
+        {% endif %}
+      </div>
+
+      <div class="hyrox-division__content">
+        <p class="hyrox-division__eyebrow">Pick your division</p>
+        <h2 class="hyrox-division__title">
+          <span>{{ block.settings.tab_label }}</span>
+          <span>Race Weights</span>
+        </h2>
+
+        <div class="hyrox-division__tabs" role="tablist" aria-label="Race divisions">
+          {% for tab_block in section.blocks %}
+            <button
+              class="hyrox-division__tab{% if tab_block.id == block.id %} is-active{% endif %}"
+              type="button"
+              role="tab"
+              aria-selected="{% if tab_block.id == block.id %}true{% else %}false{% endif %}"
+              data-division-tab="{{ tab_block.id }}"
+            >
+              <span>{{ tab_block.settings.tab_label }}</span>
+              <span class="hyrox-division__check" aria-hidden="true">✓</span>
+            </button>
+          {% endfor %}
+        </div>
+
+        <dl class="hyrox-division__weights">
+          <div class="hyrox-division__weight-row">
+            <div><dt>Sled Push</dt><dd>4 × 12.5 m</dd></div><dd class="hyrox-division__value">{{ block.settings.sled_push }}</dd>
+          </div>
+          <div class="hyrox-division__weight-row">
+            <div><dt>Sled Pull</dt><dd>4 × 12.5 m</dd></div><dd class="hyrox-division__value">{{ block.settings.sled_pull }}</dd>
+          </div>
+          <div class="hyrox-division__weight-row">
+            <div><dt>Farmers Carry</dt><dd>200 m</dd></div><dd class="hyrox-division__value">{{ block.settings.farmers_carry }}</dd>
+          </div>
+          <div class="hyrox-division__weight-row">
+            <div><dt>Sandbag Lunges</dt><dd>100 m</dd></div><dd class="hyrox-division__value">{{ block.settings.sandbag_lunges }}</dd>
+          </div>
+          <div class="hyrox-division__weight-row">
+            <div><dt>Wall Balls</dt><dd>100 reps</dd></div><dd class="hyrox-division__value">{{ block.settings.wall_balls }}</dd>
+          </div>
+        </dl>
+
+        {% if button_label != blank %}
+          <a class="hyrox-division__cta" href="{{ button_link | default: routes.all_products_collection_url }}">
+            <span>{{ button_label }}{% if division_product != blank %} · {{ division_product.price | money }}{% endif %}</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        {% endif %}
+
+        <div class="hyrox-division__footer">
+          <span>★ {{ block.settings.rating_text }}</span>
+          {% if block.settings.secondary_text != blank %}
+            <a href="{{ block.settings.secondary_link | default: routes.all_products_collection_url }}">{{ block.settings.secondary_text }}</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="hyrox-division__empty">Add division blocks to this section.</div>
+  {% endfor %}
+</hyrox-division-weights>
+
+{% schema %}
+{
+  "name": "HYROX division weights",
+  "tag": "section",
+  "class": "hyrox-division-section",
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "division",
+      "name": "Division",
+      "settings": [
+        { "type": "text", "id": "tab_label", "label": "Tab label", "default": "Men's Open" },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "MEN'S OPEN RACE WEIGHTS" },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "header", "content": "Race weights" },
+        { "type": "text", "id": "sled_push", "label": "Sled push", "default": "152 KG" },
+        { "type": "text", "id": "sled_pull", "label": "Sled pull", "default": "103 KG" },
+        { "type": "text", "id": "farmers_carry", "label": "Farmers carry", "default": "2×24 KG" },
+        { "type": "text", "id": "sandbag_lunges", "label": "Sandbag lunges", "default": "20 KG" },
+        { "type": "text", "id": "wall_balls", "label": "Wall balls", "default": "6 KG" },
+        { "type": "header", "content": "Bundle" },
+        { "type": "product", "id": "product", "label": "Bundle product" },
+        { "type": "text", "id": "button_text", "label": "Button text", "default": "Shop the Men's Open Bundle" },
+        { "type": "url", "id": "button_link", "label": "Button link" },
+        { "type": "text", "id": "rating_text", "label": "Rating text", "default": "4.9 rating · Bundle includes a $100 gift card" },
+        { "type": "text", "id": "secondary_text", "label": "Secondary link text", "default": "Or build it station by station" },
+        { "type": "url", "id": "secondary_link", "label": "Secondary link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "HYROX division weights",
+      "blocks": [
+        { "type": "division", "settings": { "tab_label": "Men's Open", "heading": "MEN'S OPEN RACE WEIGHTS", "sled_push": "152 KG", "sled_pull": "103 KG", "farmers_carry": "2×24 KG", "sandbag_lunges": "20 KG", "wall_balls": "6 KG", "button_text": "Shop the Men's Open Bundle" } },
+        { "type": "division", "settings": { "tab_label": "Women's Open", "heading": "WOMEN'S OPEN RACE WEIGHTS", "sled_push": "102 KG", "sled_pull": "78 KG", "farmers_carry": "2×16 KG", "sandbag_lunges": "10 KG", "wall_balls": "4 KG", "button_text": "Shop the Women's Open Bundle" } },
+        { "type": "division", "settings": { "tab_label": "Men's Pro", "heading": "MEN'S PRO RACE WEIGHTS", "sled_push": "202 KG", "sled_pull": "153 KG", "farmers_carry": "2×32 KG", "sandbag_lunges": "30 KG", "wall_balls": "9 KG", "button_text": "Shop the Men's Pro Bundle" } },
+        { "type": "division", "settings": { "tab_label": "Women's Pro", "heading": "WOMEN'S PRO RACE WEIGHTS", "sled_push": "152 KG", "sled_pull": "103 KG", "farmers_carry": "2×24 KG", "sandbag_lunges": "20 KG", "wall_balls": "6 KG", "button_text": "Shop the Women's Pro Bundle" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
